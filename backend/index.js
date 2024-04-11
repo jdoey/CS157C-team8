@@ -22,9 +22,9 @@ const app = express();
 app.use(cors())
 app.use(express.json());
 
-const routes = require('./src/routes/routes');
+const authRoutes = require('./src/routes/auth');
 
-app.use('/api', routes)
+app.use('/auth', authRoutes)
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}`)
