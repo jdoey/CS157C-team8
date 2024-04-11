@@ -10,7 +10,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LogInPage />} />
-          {/* <Route path="/signup" element={<SignUpPage />} /> */}
+          <Route path="/signup" element={<SignUpPage />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>
