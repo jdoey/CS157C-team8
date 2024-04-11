@@ -1,33 +1,51 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const userProfileSchema = new mongoose.Schema({
-    user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'UserCredentials', required: true },
-    name: String,
-    location: String,
-    bio: String,
-    photos: [String],
-    age: Number,
-    gender: String,
-    dogs: [{
-        name: String,
-        breed: String,
-        age: Number,
-        gender: String,
-        bio: String,
-        photos: [String],
-        prompts: [{
-            prompt: String,
-            answer: String,
-            created_at: { type: Date, default: Date.now },
-            updated_at: { type: Date, default: Date.now }
-        }],
-        created_at: { type: Date, default: Date.now },
-        updated_at: { type: Date, default: Date.now }
-    }],
-    created_at: { type: Date, default: Date.now },
-    updated_at: { type: Date, default: Date.now }
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "UserCredentials",
+    required: true,
+  },
+  firstName: String,
+  lastName: String,
+  location: String,
+  bio: String,
+  photos: [String],
+  age: Number,
+  birthday: Date,
+  gender: String,
+  ownerPrompts: [
+    {
+      prompt: String,
+      answer: String,
+      created_at: { type: Date, default: Date.now },
+      updated_at: { type: Date, default: Date.now },
+    },
+  ],
+  dogs: [
+    {
+      name: String,
+      breed: String,
+      age: Number,
+      gender: String,
+      bio: String,
+      photos: [String],
+      dogPrompts: [
+        {
+          prompt: String,
+          answer: String,
+          created_at: { type: Date, default: Date.now },
+          updated_at: { type: Date, default: Date.now },
+        },
+      ],
+      created_at: { type: Date, default: Date.now },
+      updated_at: { type: Date, default: Date.now },
+    },
+  ],
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now },
 });
 
-const UserProfile = mongoose.model('UserProfile', userProfileSchema);
+const UserProfile = mongoose.model("UserProfile", userProfileSchema);
 
 module.exports = { UserProfile };

@@ -69,7 +69,7 @@ export default function LogInPage() {
             </Text>
           </a>
 
-          <a href="/signUp">
+          <a href="/createProfile">
             <Text className={styles.bottomText}>Create Account</Text>
           </a>
         </Flex>
