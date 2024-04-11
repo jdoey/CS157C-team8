@@ -1,0 +1,77 @@
+.container {
+  flex-direction: column;
+  padding: 48px 48px;
+}
+
+.headerText {
+  font-size: 24px;
+  padding-bottom: 8px;
+  font-weight: bold;
+}
+
+.textContainer {
+  flex-direction: column;
+  margin: 0 36px;
+  max-width: 100%;
+}
+
+.emailInputContainer {
+  flex-direction: column;
+  width: 100%;
+}
+
+.continueButton {
+  margin: 16px 0px 24px 0px;
+  width: 100%;
+}
+
+.bottomText {
+  font-size: 12px;
+  color: gray;
+  cursor: pointer;
+}
+
+.stepContainer {
+  flex-direction: column;
+  padding-top: 12px;
+}
+
+.stepperButton {
+  justify-content: end;
+  gap: 16px;
+  margin-top: 48px;
+}
+
+/* Step 2  */
+.inputText {
+  font-size: 18px;
+  /* font-weight: bold; */
+  font-style: italic;
+}
+
+/* Step 3  */
+.promptBox {
+  flex-direction: column;
+  /* border: dashed 1px #707070;
+  padding: 4px 8px; */
+  margin-bottom: 12px;
+}
+
+@media screen and (min-width: 800px) {
+  .container {
+    box-sizing: border-box;
+    justify-content: start;
+    width: 50%;
+    min-height: calc(100vh - 128px);
+    height: auto;
+    /* align-items: center; */
+    flex-direction: column;
+    padding: 48px 48px;
+    /* gap: 34px; */
+    border-radius: 24px;
+    box-shadow: 0 11px 34px 0 rgba(0, 0, 0, 0.2);
+    margin: auto;
+    margin-top: 64px;
+    margin-bottom: 64px;
+  }
+}
