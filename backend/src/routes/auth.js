@@ -19,12 +19,36 @@ router.get('/login', async (req, res) => {
     }
 
     const isValidPassword = await bcrypt.compare(password, user.password);
-    
+
     if (!isValidPassword) {
         return res.status(401).json({ message: 'Invalid username or password' });
     }
 
     return res.status(200).json({ message: 'Login successful' });
 })
+
+router.post('/signup', async (req, res) => {
+    const { email, password } = req.body;
+    
+    const existingUser = await UserCredentials.findOne({ email });
+
+    if (existingUser) {
+        return res.status(400).json({ message: 'An account with the provided email already exists' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new UserCredentials({
+        email,
+        password: hashedPassword
+    });
+
+    try {
+        await newUser.save();
+        return res.status(201).json({ message: 'User created successfully' });
+    } catch (error) {
+        return res.status(500).json({ message: 'Failed to create user' })
+    }
+});
 
 module.exports = router;
