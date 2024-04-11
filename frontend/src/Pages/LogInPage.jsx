@@ -1,16 +1,17 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Flex, Text, IconButton, FormLabel, Button } from "@chakra-ui/react";
-
 import { FaDog } from "react-icons/fa6";
 import * as Yup from "yup";
 import { Formik, Form, FormikHelpers } from "formik";
+import { useNavigate } from "react-router-dom";
 import Input from "../Components/Input";
 import styles from "./LogInPage.module.css";
 
 export default function LogInPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const initialValues = { email: "", password: "" };
+  const navigate = useNavigate();
+
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Required"),
     password: Yup.string()
@@ -19,7 +20,17 @@ export default function LogInPage() {
   });
 
   const handleSubmit = async (values) => {
-    console.log(values);
+    try {
+      console.log(values);
+      const response = await axios.post("http://localhost:3001/auth/login", {
+        email: values.email,
+        password: values.password,
+      });
+      console.log(response.data);
+      navigate("/home");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

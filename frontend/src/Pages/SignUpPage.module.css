@@ -3,21 +3,38 @@
   padding: 48px 48px;
 }
 
-.headerText {
-  font-size: 24px;
-  padding-bottom: 8px;
-  font-weight: bold;
-}
-
 .textContainer {
   flex-direction: column;
+  align-items: center;
   margin: 0 36px;
   max-width: 100%;
+}
+
+.circle {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background-color: black;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.dogIcon {
+  color: #fff;
+  width: 30px;
+  height: 30px;
 }
 
 .emailInputContainer {
   flex-direction: column;
   width: 100%;
+}
+
+.headerText {
+  font-size: 24px;
+  padding-bottom: 8px;
+  font-weight: bold;
 }
 
 .continueButton {
@@ -29,11 +46,6 @@
   font-size: 12px;
   color: gray;
   cursor: pointer;
-}
-
-.stepContainer {
-  flex-direction: column;
-  padding-top: 12px;
 }
 
 .stepperButton {
@@ -52,8 +64,8 @@
 /* Step 3  */
 .promptBox {
   flex-direction: column;
-  /* border: dashed 1px #707070;
-  padding: 4px 8px; */
+  border: dashed 1px #707070;
+  padding: 4px 8px;
   margin-bottom: 12px;
 }
 
