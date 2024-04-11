@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 
 const mongoString = process.env.DATABASE_URL
-const port = 3000;
+const port = 3001;
 
 mongoose.connect(mongoString);
 const database = mongoose.connection;
