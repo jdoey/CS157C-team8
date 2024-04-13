@@ -16,12 +16,14 @@ router.post("/login", async (req, res) => {
   const user = await UserCredentials.findOne({ email });
 
   if (!user) {
+    console.log("Invalid email");
     return res.status(401).json({ message: "Invalid email or password" });
   }
 
   const isValidPassword = await bcrypt.compare(password, user.password);
 
   if (!isValidPassword) {
+    console.log("Invalid password");
     return res.status(401).json({ message: "Invalid username or password" });
   }
 
@@ -30,7 +32,20 @@ router.post("/login", async (req, res) => {
 
 router.post("/signup", async (req, res) => {
   console.log("sign up called");
-  const { email, password } = req.body;
+  const {
+    email,
+    password,
+    ownerName,
+    gender,
+    birthday,
+    zipcode,
+    petName,
+    petBreed,
+    petAge,
+    petGender,
+    ownerPrompts,
+    dogPrompts,
+  } = req.body;
 
   const existingUser = await UserCredentials.findOne({ email });
 
@@ -49,9 +64,43 @@ router.post("/signup", async (req, res) => {
 
   try {
     await newUser.save();
+    const userProfile = new UserProfile({
+      user_id: newUser._id,
+      ownerName: ownerName,
+      location: zipcode,
+      birthday: birthday,
+      gender: gender,
+      ownerPrompts: ownerPrompts,
+      dogs: [
+        {
+          name: petName,
+          breed: petBreed,
+          age: petAge,
+          gender: petGender,
+          bio: "",
+          photos: [],
+          dogPrompts: dogPrompts,
+        },
+      ],
+    });
+    await userProfile.save();
     return res.status(201).json({ message: "User created successfully" });
   } catch (error) {
     return res.status(500).json({ message: "Failed to create user" });
+  }
+});
+
+router.get("/checkEmail", async (req, res) => {
+  const { email } = req.query;
+  try {
+    const existingUser = await UserCredentials.findOne({ email });
+    if (existingUser) {
+      return res.json({ exists: true });
+    } else {
+      return res.json({ exists: false });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "Server error" });
   }
 });
 

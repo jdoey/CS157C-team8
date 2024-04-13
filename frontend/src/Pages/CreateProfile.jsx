@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import * as Yup from "yup";
 import {
   Flex,
@@ -12,7 +13,7 @@ import {
   Stepper,
   useSteps,
 } from "@chakra-ui/react";
-
+import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import { IoArrowBack } from "react-icons/io5";
 
@@ -30,9 +31,18 @@ const steps = [
 ];
 
 export default function CreateProfile() {
+  const navigate = useNavigate();
   const initialValues = {
     email: "",
     password: "",
+    ownerName: "",
+    gender: "",
+    birthday: null,
+    zipcode: null,
+    petName: "",
+    petBreed: "",
+    petAge: null,
+    petGender: "",
     ownerPrompt1: "",
     ownerAns1: "",
     ownerPrompt2: "",
@@ -46,25 +56,65 @@ export default function CreateProfile() {
     dogPrompt3: "",
     dogAns3: "",
   };
+
+  const checkEmail = async (email) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/auth/checkEmail`,
+        {
+          params: { email: email },
+        }
+      );
+      console.log(response.data);
+      return response.data.exists ? false : true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
   const validationSchema = Yup.object().shape({
-    email: Yup.string().email("Invalid email").required("Required"),
+    email: Yup.string()
+      .email("Invalid email")
+      .required("Required")
+      .test("checkEmail", "Email already exists", checkEmail),
     password: Yup.string()
       .required("Required")
       .min(8, "Too short! Minimum length should be 8 characters"),
   });
 
   const handleSubmit = async (values) => {
-    const ownerprompts = [
-      { prompt: values.ownerPrompt1, answer: values.ownerAns1 },
-      { prompt: values.ownerPrompt2, answer: values.ownerAns2 },
-      { prompt: values.ownerPrompt3, answer: values.ownerAns3 },
-    ];
-    const dogprompts = [
-      { prompt: values.dogPrompt1, answer: values.dogAns1 },
-      { prompt: values.dogPrompt2, answer: values.dogAns2 },
-      { prompt: values.dogPrompt3, answer: values.dogAns3 },
-    ];
-    console.log(values);
+    try {
+      console.log("Final form values being submitted:", values);
+      const response = await axios.post("http://localhost:3001/auth/signup", {
+        email: values.email,
+        password: values.password,
+        ownerName: values.ownerName,
+        gender: values.gender,
+        birthday: values.birthday,
+        zipcode: values.zipcode,
+        ownerPrompts: [
+          { prompt: values.ownerPrompt1, answer: values.ownerAns1 },
+          { prompt: values.ownerPrompt2, answer: values.ownerAns2 },
+          { prompt: values.ownerPrompt3, answer: values.ownerAns3 },
+        ],
+        petName: values.petName,
+        petBreed: values.petBreed,
+        petAge: values.petAge,
+        petGender: values.petGender,
+        dogPrompts: [
+          { prompt: values.dogPrompt1, answer: values.dogAns1 },
+          { prompt: values.dogPrompt2, answer: values.dogAns2 },
+          { prompt: values.dogPrompt3, answer: values.dogAns3 },
+        ],
+      });
+      if (response.data) {
+        console.log("Signup successful:", response.data);
+      }
+      navigate("/home");
+    } catch (error) {
+      console.error("Signup failed:", error.response?.data || error.message);
+    }
   };
 
   const handleBackClick = () => {
@@ -172,8 +222,7 @@ function Step1() {
   return (
     <>
       <Text className={styles.headerText}>Create Account</Text>
-      <Input name="firstName" type="text" label="First Name" required />
-      <Input name="lastName" type="text" label="Last Name" required />
+      <Input name="ownerName" type="text" label="Name" required />
       <Input
         name="email"
         type="email"
