@@ -6,12 +6,10 @@ const userProfileSchema = new mongoose.Schema({
     ref: "UserCredentials",
     required: true,
   },
-  firstName: String,
-  lastName: String,
+  ownerName: String,
   location: String,
   bio: String,
   photos: [String],
-  age: Number,
   birthday: Date,
   gender: String,
   ownerPrompts: [
@@ -28,7 +26,6 @@ const userProfileSchema = new mongoose.Schema({
       breed: String,
       age: Number,
       gender: String,
-      bio: String,
       photos: [String],
       dogPrompts: [
         {

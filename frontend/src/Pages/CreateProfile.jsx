@@ -35,8 +35,7 @@ export default function CreateProfile() {
   const initialValues = {
     email: "",
     password: "",
-    firstName: "",
-    lastName: "",
+    ownerName: "",
     gender: "",
     birthday: null,
     zipcode: null,
@@ -86,11 +85,11 @@ export default function CreateProfile() {
 
   const handleSubmit = async (values) => {
     try {
+      console.log("Final form values being submitted:", values);
       const response = await axios.post("http://localhost:3001/auth/signup", {
         email: values.email,
         password: values.password,
-        firstName: values.firstName,
-        lastName: values.lastName,
+        ownerName: values.ownerName,
         gender: values.gender,
         birthday: values.birthday,
         zipcode: values.zipcode,
@@ -223,8 +222,7 @@ function Step1() {
   return (
     <>
       <Text className={styles.headerText}>Create Account</Text>
-      <Input name="firstName" type="text" label="First Name" required />
-      <Input name="lastName" type="text" label="Last Name" required />
+      <Input name="ownerName" type="text" label="Name" required />
       <Input
         name="email"
         type="email"

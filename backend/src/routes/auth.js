@@ -35,8 +35,7 @@ router.post("/signup", async (req, res) => {
   const {
     email,
     password,
-    firstName,
-    lastName,
+    ownerName,
     gender,
     birthday,
     zipcode,
@@ -44,18 +43,8 @@ router.post("/signup", async (req, res) => {
     petBreed,
     petAge,
     petGender,
-    dogAns1,
-    dogAns2,
-    dogAns3,
-    dogPrompt1,
-    dogPrompt2,
-    dogPrompt3,
-    ownerAns1,
-    ownerAns2,
-    ownerAns3,
-    ownerPrompt1,
-    ownerPrompt2,
-    ownerPrompt3,
+    ownerPrompts,
+    dogPrompts,
   } = req.body;
 
   const existingUser = await UserCredentials.findOne({ email });
@@ -77,17 +66,11 @@ router.post("/signup", async (req, res) => {
     await newUser.save();
     const userProfile = new UserProfile({
       user_id: newUser._id,
-      firstName: firstName,
-      lastName: lastName,
+      ownerName: ownerName,
       location: zipcode,
-      //   age: birthday,
       birthday: birthday,
       gender: gender,
-      ownerPrompts: [
-        { prompt: ownerPrompt1, answer: ownerAns1 },
-        { prompt: ownerPrompt2, answer: ownerAns2 },
-        { prompt: ownerPrompt3, answer: ownerAns3 },
-      ],
+      ownerPrompts: ownerPrompts,
       dogs: [
         {
           name: petName,
@@ -96,11 +79,7 @@ router.post("/signup", async (req, res) => {
           gender: petGender,
           bio: "",
           photos: [],
-          dogPrompts: [
-            { prompt: dogPrompt1, answer: dogAns1 },
-            { prompt: dogPrompt2, answer: dogAns2 },
-            { prompt: dogPrompt3, answer: dogAns3 },
-          ],
+          dogPrompts: dogPrompts,
         },
       ],
     });
