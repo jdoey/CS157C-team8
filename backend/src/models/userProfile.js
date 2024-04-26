@@ -39,6 +39,7 @@ const userProfileSchema = new mongoose.Schema({
       updated_at: { type: Date, default: Date.now },
     },
   ],
+  directMessageUserList: [{ type: mongoose.Schema.Types.ObjectId, ref: 'UserProfile' }],
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
 });
