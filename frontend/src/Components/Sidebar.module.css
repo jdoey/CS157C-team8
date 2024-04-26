@@ -1,0 +1,51 @@
+.container {
+  flex-direction: column;
+  border-right: 1px solid rgba(192, 192, 192, 0.6);
+  height: 100vh;
+  width: 18vw;
+}
+
+.logoContainer {
+  align-items: center;
+  display: flex;
+  height: 10vh;
+  width: 100%;
+  padding: 24px 24px;
+  border-bottom: 1px solid rgba(192, 192, 192, 0.6);
+}
+
+.circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: black;
+  justify-content: center;
+  align-items: center;
+}
+
+.dogIcon {
+  color: #fff;
+  width: 18px;
+  height: 18px;
+}
+
+.logoText {
+  font-size: 20px;
+  font-weight: 700;
+  margin-left: 8px;
+}
+
+.navContainer {
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 16px;
+}
+
+.sidebarButton {
+  width: 100%;
+  gap: 8px;
+}
+
+.sidebarButton:hover {
+  background-color: rgba(192, 192, 192, 0.6);
+}
