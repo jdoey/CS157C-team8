@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Flex,
   Card,
@@ -14,7 +14,7 @@ import {
 
 import UserCard from "./UserCard";
 
-const MessagesList = ({ name, options, ...props }) => {
+const MessagesList = ({ name, selected, handleSelect, options, ...props }) => {
   return (
     <Box width={["100%", "450px"]}>
       <Card height={"100%"} borderWidth="1px" borderColor="gray.200">
@@ -22,9 +22,24 @@ const MessagesList = ({ name, options, ...props }) => {
           <Heading size="lg">Messages</Heading>
         </CardHeader>
         <CardBody>
-          <UserCard name={"Jonathan"} lastMessage={"You: hi john"} />
-          <UserCard name={"Sephia"} lastMessage={"You: hi seph"} />
-          <UserCard name={"Anusha"} lastMessage={"hi"} />
+          <UserCard
+            name={"Jonathan"}
+            lastMessage={"You: hi john"}
+            selected={selected}
+            handleSelect={handleSelect}
+          />
+          <UserCard
+            name={"Sephia"}
+            lastMessage={"You: hi seph"}
+            selected={selected}
+            handleSelect={handleSelect}
+          />
+          <UserCard
+            name={"Anusha"}
+            lastMessage={"hi"}
+            selected={selected}
+            handleSelect={handleSelect}
+          />
         </CardBody>
       </Card>
     </Box>

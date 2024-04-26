@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Flex,
   Card,
@@ -12,13 +12,23 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-const UserCard = ({ name, lastMessage, options, ...props }) => {
+const UserCard = ({
+  name,
+  lastMessage,
+  selected,
+  handleSelect,
+  options,
+  ...props
+}) => {
   return (
     <Card
+      id={name}
+      onClick={() => handleSelect(name)}
       _hover={{
         boxShadow: "lg",
         bg: "gray.100",
       }}
+      bg={selected === name ? "gray.200" : "white"}
     >
       <CardHeader>
         <Stack direction="row">

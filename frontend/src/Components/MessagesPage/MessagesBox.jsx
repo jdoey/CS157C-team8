@@ -13,17 +13,17 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-const MessagesBox = ({ name, options, ...props }) => {
+const MessagesBox = ({ name, selected, options, ...props }) => {
   return (
-    <Box width={["100%", "50vw"]}>
+    <Box width={["100%", "58vw"]} pr={0}>
       <Card height={"100%"}>
         <Stack height={"95%"}>
           <Card>
             <CardHeader>
               <Stack direction="row" alignItems="center">
-                <Avatar size={"md"} name={"Jonathan"} />
+                <Avatar size={"md"} name={selected} />
                 <Stack pl={"20px"}>
-                  <Heading size="md">{"Jonathan"}</Heading>
+                  <Heading size="md">{selected}</Heading>
                 </Stack>
               </Stack>
             </CardHeader>
@@ -39,7 +39,7 @@ const MessagesBox = ({ name, options, ...props }) => {
             <Box pl={6} pt={4}>
               <Stack columnGap={3} maxWidth={"45%"}>
                 <Stack direction="row" alignItems="center" gap={"15px"}>
-                  <Avatar size={"sm"} name={"Jonathan"} />
+                  <Avatar size={"sm"} name={selected} />
                   <Card borderRadius="3xl" bg={"gray.100"}>
                     <CardBody p={3} pt={2} pb={2}>
                       <Text fontSize={"sm"}>
