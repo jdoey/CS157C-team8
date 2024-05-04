@@ -7,7 +7,17 @@ const userProfileSchema = new mongoose.Schema({
     required: true,
   },
   ownerName: String,
-  location: String,
+  city: String,
+  state: String,
+  loc: {
+    type: {
+      type: String,
+      enum: ["Point"],
+    },
+    coordinates: {
+      type: [Number],
+    },
+  },
   bio: String,
   photos: [String],
   birthday: Date,
