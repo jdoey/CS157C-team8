@@ -6,6 +6,6 @@ const conversationSchema = new mongoose.Schema({
     timestamp: { type: Date, default: Date.now },
 });
 
-const conversation = mongoose.model('Conversation', conversationSchema);
+const Conversation = mongoose.model('Conversation', conversationSchema);
 
-module.exports = { conversation };
+module.exports = { Conversation };

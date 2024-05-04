@@ -45,7 +45,7 @@ router.get("/messages/:conversationId", async (req, res) => {
     }
 })
 
-router.get("/messages/:userId", async (req, res) => {
+router.get("/conversations/:userId", async (req, res) => {
     try {
         const userId = req.params.userId;
         const conversations = await Conversation.find({ users: userId }).populate({ path: 'users', select: 'ownerName'}).populate('latestMessage');
