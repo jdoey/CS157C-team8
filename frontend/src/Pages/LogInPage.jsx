@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../axiosInstance";
 import { Flex, Text, IconButton, FormLabel, Button } from "@chakra-ui/react";
 import { FaDog } from "react-icons/fa6";
 import * as Yup from "yup";
 import { Formik, Form, FormikHelpers } from "formik";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 import Input from "../Components/Input";
 import styles from "./LogInPage.module.css";
 
@@ -22,7 +23,7 @@ export default function LogInPage() {
   const handleSubmit = async (values) => {
     try {
       console.log(values);
-      const response = await axios.post("http://localhost:3001/auth/login", {
+      const response = await axiosInstance.post("/auth/login", {
         email: values.email,
         password: values.password,
       });
@@ -35,6 +36,7 @@ export default function LogInPage() {
 
   return (
     <Flex className={styles.container}>
+      <Toaster position="top-center" reverseOrder={false} />
       <Flex className={styles.textContainer}>
         <Flex className={styles.circle}>
           <FaDog className={styles.dogIcon} />

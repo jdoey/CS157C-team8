@@ -13,7 +13,12 @@ const dogProfileSchema = new mongoose.Schema({
     habits: [String],
     isRescue: Boolean,
     bio: String,
-    photos: [String],
+    photos: [
+        {
+            url: String, // URL or file path of the picture
+            caption: String // Optional caption for the picture
+        }
+    ],
     likes: [String],
     dislikes: [String],
     medicalHistory: {

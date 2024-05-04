@@ -1,34 +1,53 @@
-require('dotenv').config();
-const cors = require('cors');
-const express = require('express');
-const mongoose = require('mongoose');
+require("dotenv").config();
+const cors = require("cors");
+const express = require("express");
+const session = require("express-session");
+const mongoose = require("mongoose");
 
+const authRoute = require("./src/routes/auth");
+const userRoute = require("./src/routes/user");
+const chatRoute = require("./src/routes/chat")
 
-const mongoString = process.env.DATABASE_URL
+const mongoString = process.env.DATABASE_URL;
 const port = 3001;
 
 mongoose.connect(mongoString);
 const database = mongoose.connection;
 
-database.on('error', (error) => {
-    console.log(error)
-})
+database.on("error", (error) => {
+  console.log(error);
+});
 
-database.once('connected', () => {
-    console.log('Database Connected');
-})
+database.once("connected", () => {
+  console.log("Database Connected");
+});
 
 const app = express();
-app.use(cors())
+
+// express session
+let TIME = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+const sessionConfig = session({
+  secret: "keyboard cat",
+  cookie: {
+    maxAge: TIME,
+  },
+  resave: false,
+  saveUninitialized: true,
+});
+app.use(sessionConfig);
+
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(express.json());
 
-const authRoutes = require('./src/routes/auth');
-const chatRoutes = require('./src/routes/chat');
-
-app.use('/auth', authRoutes);
-app.use('/chat', chatRoutes);
+app.use("/auth", authRoute);
+app.use("/user", userRoute);
+app.use("/chat", chatRoute);
 
 app.listen(port, () => {
-  console.log(`Server started on port ${port}`)
-})
-
+  console.log(`Server started on port ${port}`);
+});

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import * as Yup from "yup";
 import {
@@ -14,8 +14,19 @@ import {
   useSteps,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { Formik, Form, Field } from "formik";
+
+import {
+  MapContainer,
+  TileLayer,
+  useMapEvents,
+  Marker,
+  Popup,
+} from "react-leaflet";
+import L from "leaflet";
+
+import { Formik, Form, Field, useField } from "formik";
 import { IoArrowBack } from "react-icons/io5";
+import toast, { Toaster } from "react-hot-toast";
 
 import Input from "../Components/Input";
 import Select from "../Components/Select";
@@ -32,13 +43,16 @@ const steps = [
 
 export default function CreateProfile() {
   const navigate = useNavigate();
+
   const initialValues = {
     email: "",
     password: "",
     ownerName: "",
     gender: "",
     birthday: null,
-    zipcode: null,
+    city: "",
+    state: "",
+    coordinates: [],
     petName: "",
     petBreed: "",
     petAge: null,
@@ -92,7 +106,12 @@ export default function CreateProfile() {
         ownerName: values.ownerName,
         gender: values.gender,
         birthday: values.birthday,
-        zipcode: values.zipcode,
+        city: values.city,
+        state: values.state,
+        loc: {
+          type: "Point",
+          coordinates: values.coordinates,
+        },
         ownerPrompts: [
           { prompt: values.ownerPrompt1, answer: values.ownerAns1 },
           { prompt: values.ownerPrompt2, answer: values.ownerAns2 },
@@ -111,7 +130,8 @@ export default function CreateProfile() {
       if (response.data) {
         console.log("Signup successful:", response.data);
       }
-      navigate("/home");
+      toast.success("Account Successfully Created!");
+      navigate("/");
     } catch (error) {
       console.error("Signup failed:", error.response?.data || error.message);
     }
@@ -152,6 +172,8 @@ export default function CreateProfile() {
         return <Step5 />;
       case 5:
         return <Step6 />;
+      case 6:
+        return <Step7 />;
       default:
         return <div>Unknown Step</div>;
     }
@@ -252,10 +274,58 @@ function Step2() {
       </Text>
       <Input name="birthday" type="date" label="" required />
       <Text className={styles.inputText}>Where Do You Live?</Text>
-      <Text fontSize="10px" fontStyle="italic">
-        Enter Your Zip Code
+      <Flex gap="24px">
+        <Input name="city" type="text" label="City" />
+        <Input name="state" type="text" label="State" />
+      </Flex>
+    </>
+  );
+}
+
+function LocationMarker() {
+  const [field, meta, helpers] = useField("coordinates");
+  const { setValue } = helpers;
+
+  const [position, setPosition] = useState(null);
+  const map = useMapEvents({
+    click: () => {
+      map.locate();
+    },
+    locationfound(e) {
+      setPosition(e.latlng);
+      setValue([e.latlng.lat, e.latlng.lng]);
+      map.flyTo(e.latlng, 13);
+    },
+  });
+
+  return position === null ? null : (
+    <Marker position={position}>
+      <Popup>You are here</Popup>
+    </Marker>
+  );
+}
+
+function Step3() {
+  return (
+    <>
+      <Text className={styles.headerText}>Location</Text>
+      <Text className={styles.mapSubText} marginTop="-12px">
+        Click on the map to get your current location
       </Text>
-      <Input name="zipcode" type="number" label="" />
+      <Text className={styles.mapSubText} paddingBottom="8px">
+        Press Next to Confirm
+      </Text>
+      <MapContainer
+        center={{ lat: 39.8097343, lng: -98.5556199 }}
+        zoom={4}
+        id="map"
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <LocationMarker />
+      </MapContainer>
     </>
   );
 }
@@ -278,7 +348,7 @@ const ownerPrompts = [
   },
 ];
 
-function Step3() {
+function Step4() {
   return (
     <>
       <Text className={styles.headerText}>Prompts For You</Text>
@@ -292,7 +362,7 @@ function Step3() {
   );
 }
 
-function Step4() {
+function Step5() {
   return (
     <>
       <Text className={styles.headerText}>About Fur Friend 🐶</Text>
@@ -328,7 +398,7 @@ const dogPrompts = [
   },
 ];
 
-function Step5() {
+function Step6() {
   return (
     <>
       <Text className={styles.headerText}>Prompts For Fur Friend</Text>
@@ -342,7 +412,7 @@ function Step5() {
   );
 }
 
-function Step6() {
+function Step7() {
   return (
     <>
       <Text className={styles.headerText}>Picture 📸</Text>
