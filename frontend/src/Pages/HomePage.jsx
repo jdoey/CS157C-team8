@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Flex,
   Text,
@@ -15,6 +15,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../Components/CustomCarousel.css";
+import axiosInstance from "../axiosInstance";
 
 import styles from "./HomePage.module.css";
 
@@ -24,9 +25,10 @@ export default function HomePage() {
   return (
     <Layout>
       <Flex className={styles.container}>
-        <Flex className={styles.infoContainer}>
+        <Text>TODO: Home Page</Text>
+        {/* <Flex className={styles.infoContainer}>
           <Profile />
-        </Flex>
+        </Flex> */}
       </Flex>
     </Layout>
   );

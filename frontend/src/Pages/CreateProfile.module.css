@@ -49,7 +49,12 @@
   font-style: italic;
 }
 
-/* Step 3  */
+.mapSubText {
+  font-size: 14px;
+  color: gray;
+  font-style: italic;
+}
+
 .promptBox {
   flex-direction: column;
   /* border: dashed 1px #707070;

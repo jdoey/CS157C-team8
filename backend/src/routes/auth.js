@@ -2,12 +2,13 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const { UserCredentials } = require("../models/userCredentials");
 const { UserProfile } = require("../models/userProfile");
+const { checkLoggedIn } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
 router.get("/", (req, res) => res.send("Hello World!"));
 
-router.get("/test", (req, res) => res.send("test success!"));
+router.get("/test", checkLoggedIn, (req, res) => res.send("test success!"));
 
 router.post("/login", async (req, res) => {
   console.log("login called");
@@ -27,6 +28,7 @@ router.post("/login", async (req, res) => {
     return res.status(401).json({ message: "Invalid username or password" });
   }
 
+  req.session.user = user;
   return res.status(200).json({ message: "Login successful" });
 });
 
@@ -38,7 +40,9 @@ router.post("/signup", async (req, res) => {
     ownerName,
     gender,
     birthday,
-    zipcode,
+    city,
+    state,
+    loc,
     petName,
     petBreed,
     petAge,
@@ -67,7 +71,9 @@ router.post("/signup", async (req, res) => {
     const userProfile = new UserProfile({
       user_id: newUser._id,
       ownerName: ownerName,
-      location: zipcode,
+      city: city,
+      state: state,
+      loc: loc,
       birthday: birthday,
       gender: gender,
       ownerPrompts: ownerPrompts,

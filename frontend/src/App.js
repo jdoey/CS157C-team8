@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LogInPage from "./Pages/LogInPage";
 import CreateProfile from "./Pages/CreateProfile";
 import HomePage from "./Pages/HomePage";
+import ProfilePage from "./Pages/ProfilePage";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/" element={<LogInPage />} />
           <Route path="/createProfile" element={<CreateProfile />} />
           <Route path="/home" element={<HomePage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>
