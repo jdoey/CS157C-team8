@@ -2,19 +2,21 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const { UserProfile } = require("../models/userProfile");
 const { DirectMessage } = require("../models/directMessage");
+const { Conversation } = require("../models/conversation");
 
 const router = express.Router();
 
 router.get("/", (req, res) => res.send("Hello World!"));
 
-router.get("/message/send", async (req, res) => {
+router.post("/messages/send", async (req, res) => {
     try {
-        const { sender, receiver, content } = req.body;
+        const { sender, receiver, content, conversation } = req.body;
 
         const newMessage = new DirectMessage({
             sender,
             receiver,
             content,
+            conversation
         });
 
         await newMessage.save();
@@ -26,23 +28,31 @@ router.get("/message/send", async (req, res) => {
     }
 })
 
-router.get("/messages/:senderId/:receiverId", async (req, res) => {
+router.get("/messages/:conversationId", async (req, res) => {
     try {
-        const { senderId, receiverId } = req.params;
+        const { conversationId } = req.params;
 
         const messages = await DirectMessage.find({
-            $or: [
-                { sender: senderId, receiver: receiverId },
-                { sender: receiverId, receiver: senderId}
-            ]
+            conversation: conversationId
         })
-        .populate('sender receiver', 'name')
+        .populate('sender receiver', 'ownerName')
         .sort({ timestamp: 'asc' })
 
         res.status(200).json(messages);
     } catch (error) {
-        console.error("Error retrieving message history:", error);
+        console.error("Error retrieving message history: ", error);
         res.status(500).json({ message: 'Internal server error'});
+    }
+})
+
+router.get("/messages/:userId", async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const conversations = await Conversation.find({ users: userId }).populate({ path: 'users', select: 'ownerName'}).populate('latestMessage');
+        res.status(200).json(conversations);
+    } catch (err) {
+        console.error("Error retrieving conversations: ", err);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 })
 
