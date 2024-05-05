@@ -7,8 +7,15 @@
   flex-direction: column;
   max-width: 40vw;
   margin: auto;
-  margin-top: 32px;
+  margin-top: 16px;
   align-items: center;
+}
+
+.edit {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: #505050;
+  text-decoration: underline;
 }
 
 .carouselImg {

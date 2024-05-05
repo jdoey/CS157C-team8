@@ -30,13 +30,39 @@ const userProfileSchema = new mongoose.Schema({
       updated_at: { type: Date, default: Date.now },
     },
   ],
-  dogs: [
+   dogs: [
     {
       name: String,
       breed: String,
       age: Number,
       gender: String,
-      photos: [String],
+      size: String,
+      color: String,
+      weight: Number,
+      personality: [String],
+      habits: [String],
+      isRescue: Boolean,
+      bio: String,
+      photos: [
+        {
+            url: String, // URL or file path of the picture
+            caption: String // Optional caption for the picture
+        }
+      ],
+      likes: [String],
+      dislikes: [String],
+      medicalHistory: {
+        allergies: [String],
+        medications: [String],
+        surgeries: [String],
+        vaccinations: {
+            rabies: Date,
+            distemper: Date,
+            parvovirus: Date,
+            kennelCough: Date,
+            others: [String]
+        }
+      },
       dogPrompts: [
         {
           prompt: String,

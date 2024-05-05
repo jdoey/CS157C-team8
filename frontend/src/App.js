@@ -6,6 +6,7 @@ import CreateProfile from "./Pages/CreateProfile";
 import HomePage from "./Pages/HomePage";
 import MessagesPage from "./Pages/MessagesPage";
 import ProfilePage from "./Pages/ProfilePage";
+import EditProfile from "./Pages/EditProfile";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/messages" element={<MessagesPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/edit" element={<EditProfile />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>
