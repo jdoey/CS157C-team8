@@ -1,0 +1,25 @@
+.container {
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 64px;
+}
+
+.header {
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 16px;
+}
+
+.infoContainer {
+  flex-direction: column;
+  width: 50%;
+  margin: auto;
+}
+
+.subheader {
+  font-size: 16px;
+  font-weight: 200;
+  font-style: italic;
+  margin-top: 16px;
+}

@@ -57,18 +57,18 @@ export default function CreateProfile() {
     petBreed: "",
     petAge: null,
     petGender: "",
+    ownerPrompt0: "",
+    ownerAns0: "",
     ownerPrompt1: "",
     ownerAns1: "",
     ownerPrompt2: "",
     ownerAns2: "",
-    ownerPrompt3: "",
-    ownerAns3: "",
+    dogPrompt0: "",
+    dogAns0: "",
     dogPrompt1: "",
     dogAns1: "",
     dogPrompt2: "",
     dogAns2: "",
-    dogPrompt3: "",
-    dogAns3: "",
   };
 
   const checkEmail = async (email) => {
@@ -113,18 +113,18 @@ export default function CreateProfile() {
           coordinates: values.coordinates,
         },
         ownerPrompts: [
+          { prompt: values.ownerPrompt0, answer: values.ownerAns0 },
           { prompt: values.ownerPrompt1, answer: values.ownerAns1 },
           { prompt: values.ownerPrompt2, answer: values.ownerAns2 },
-          { prompt: values.ownerPrompt3, answer: values.ownerAns3 },
         ],
         petName: values.petName,
         petBreed: values.petBreed,
         petAge: values.petAge,
         petGender: values.petGender,
         dogPrompts: [
+          { prompt: values.dogPrompt0, answer: values.dogAns0 },
           { prompt: values.dogPrompt1, answer: values.dogAns1 },
           { prompt: values.dogPrompt2, answer: values.dogAns2 },
-          { prompt: values.dogPrompt3, answer: values.dogAns3 },
         ],
       });
       if (response.data) {
@@ -273,7 +273,7 @@ function Step2() {
         Date of Birth 🎂
       </Text>
       <Input name="birthday" type="date" label="" required />
-      <Text className={styles.inputText}>Where Do You Live?</Text>
+      {/* <Text className={styles.inputText}>Where Do You Live?</Text> */}
       <Flex gap="24px">
         <Input name="city" type="text" label="City" />
         <Input name="state" type="text" label="State" />
@@ -352,11 +352,11 @@ function Step4() {
   return (
     <>
       <Text className={styles.headerText}>Prompts For You</Text>
+      <Select name="ownerPrompt0" options={ownerPrompts} />
+      <Input name="ownerAns0" type="text" label="" />
       <Select name="ownerPrompt1" options={ownerPrompts} />
       <Input name="ownerAns1" type="text" label="" />
       <Select name="ownerPrompt2" options={ownerPrompts} />
-      <Input name="ownerAns2" type="text" label="" />
-      <Select name="ownerPrompt3" options={ownerPrompts} />
       <Input name="ownerAns3" type="text" label="" />
     </>
   );
@@ -402,12 +402,12 @@ function Step6() {
   return (
     <>
       <Text className={styles.headerText}>Prompts For Fur Friend</Text>
+      <Select name="dogPrompt0" options={dogPrompts} />
+      <Input name="dogAns0" type="text" label="" />
       <Select name="dogPrompt1" options={dogPrompts} />
       <Input name="dogAns1" type="text" label="" />
       <Select name="dogPrompt2" options={dogPrompts} />
       <Input name="dogAns2" type="text" label="" />
-      <Select name="dogPrompt3" options={dogPrompts} />
-      <Input name="dogAns3" type="text" label="" />
     </>
   );
 }

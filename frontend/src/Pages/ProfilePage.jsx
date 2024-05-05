@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Flex,
   Text,
+  Button,
   IconButton,
   Tabs,
   TabList,
@@ -9,7 +10,7 @@ import {
   Tab,
   TabPanel,
 } from "@chakra-ui/react";
-import { FaRegHeart } from "react-icons/fa6";
+import { FaPenToSquare } from "react-icons/fa6";
 import Layout from "../Components/Layout";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -66,6 +67,16 @@ export default function ProfilePage() {
     <Layout>
       <Flex className={styles.container}>
         <Flex className={styles.infoContainer}>
+          <a href="/edit">
+            <Button
+              className={styles.edit}
+              rightIcon={<FaPenToSquare />}
+              variant="ghost"
+            >
+              Edit Profile
+            </Button>
+          </a>
+
           <Tabs
             isFitted
             variant="soft-rounded"
@@ -159,11 +170,11 @@ function Box({ title, description }) {
       <Text className={styles.title}>{title}</Text>
       <Flex justifyContent="space-between" alignItems="center" width="100%">
         <Text className={styles.description}>{description}</Text>
-        <IconButton
-          icon={<FaRegHeart />}
+        {/* <IconButton
+          icon={<FaPenToSquare />}
           variant="ghost"
           className={styles.heartButton}
-        />
+        /> */}
       </Flex>
     </Flex>
   );
