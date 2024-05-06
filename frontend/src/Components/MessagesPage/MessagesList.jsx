@@ -14,7 +14,15 @@ import {
 
 import UserCard from "./UserCard";
 
-const MessagesList = ({ name, selected, handleSelect, options, ...props }) => {
+const MessagesList = ({
+  name,
+  selected,
+  handleSelect,
+  conversations,
+  profile,
+  options,
+  ...props
+}) => {
   return (
     <Box width={["100%", "450px"]}>
       <Card height={"100%"} borderWidth="1px" borderColor="gray.200">
@@ -22,7 +30,20 @@ const MessagesList = ({ name, selected, handleSelect, options, ...props }) => {
           <Heading size="lg">Messages</Heading>
         </CardHeader>
         <CardBody>
-          <UserCard
+          {conversations?.map((conversation) =>
+            conversation?.users.map((user) =>
+              profile._id !== user._id ? (
+                <UserCard
+                  key={conversation._id}
+                  name={user.ownerName}
+                  lastMessage={conversation.latestMessage}
+                  selected={selected}
+                  handleSelect={handleSelect}
+                />
+              ) : null
+            )
+          )}
+          {/* <UserCard
             name={"Jonathan"}
             lastMessage={"You: hi john"}
             selected={selected}
@@ -39,7 +60,7 @@ const MessagesList = ({ name, selected, handleSelect, options, ...props }) => {
             lastMessage={"hi"}
             selected={selected}
             handleSelect={handleSelect}
-          />
+          /> */}
         </CardBody>
       </Card>
     </Box>

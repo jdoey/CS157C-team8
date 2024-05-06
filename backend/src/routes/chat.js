@@ -45,10 +45,10 @@ router.get("/messages/:conversationId", async (req, res) => {
     }
 })
 
-router.get("/conversations/:userId", async (req, res) => {
+router.get("/conversations/:profileId", async (req, res) => {
     try {
-        const userId = req.params.userId;
-        const conversations = await Conversation.find({ users: userId }).populate({ path: 'users', select: 'ownerName'}).populate('latestMessage');
+        const profileId = req.params.profileId;
+        const conversations = await Conversation.find({ users: profileId }).populate({ path: 'users', select: 'ownerName'}).populate('latestMessage');
         res.status(200).json(conversations);
     } catch (err) {
         console.error("Error retrieving conversations: ", err);
