@@ -7,7 +7,8 @@ import axios from "axios";
 import axiosInstance from "../axiosInstance";
 
 export default function HomePage() {
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState({});
+  const [messageHistory, setMessageHistory] = useState([]);
   const [conversations, setConversations] = useState([]);
   const [profile, setProfile] = useState(null);
 
@@ -26,8 +27,9 @@ export default function HomePage() {
     fetchData();
   }, []);
 
-  const handleSelect = (name) => {
-    setSelected(name);
+  const handleSelect = (conversationId, targetUser) => {
+    setSelected(targetUser);
+    getMessageHistory(conversationId);
   };
 
   const getConversations = async (profileId) => {
@@ -45,9 +47,20 @@ export default function HomePage() {
     }
   };
 
-  // useEffect(() => {
-  //   getConversations();
-  // }, []);
+  const getMessageHistory = async (conversationId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/chat/messages/${conversationId}`,
+        {
+          params: { conversationId: conversationId },
+        }
+      );
+      console.log(response.data);
+      setMessageHistory(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <Layout>
@@ -59,7 +72,11 @@ export default function HomePage() {
             conversations={conversations}
             profile={profile}
           />
-          {selected != "" ? <MessagesBox selected={selected} /> : <Text></Text>}
+          {selected._id != null ? (
+            <MessagesBox selected={selected} messageHistory={messageHistory} />
+          ) : (
+            <Text></Text>
+          )}
         </Stack>
       </Flex>
     </Layout>

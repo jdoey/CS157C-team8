@@ -34,8 +34,9 @@ const MessagesList = ({
             conversation?.users.map((user) =>
               profile._id !== user._id ? (
                 <UserCard
-                  key={conversation._id}
+                  id={conversation._id}
                   name={user.ownerName}
+                  targetUser={user}
                   lastMessage={conversation.latestMessage}
                   selected={selected}
                   handleSelect={handleSelect}
