@@ -110,4 +110,9 @@ router.get("/checkEmail", async (req, res) => {
   }
 });
 
+router.post("/logout", (req, res) => {
+  req.session.destroy();
+  res.status(200).send("Successfully logged out");
+});
+
 module.exports = router;

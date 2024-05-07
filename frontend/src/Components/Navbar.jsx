@@ -26,10 +26,17 @@ export default function Navbar() {
 
   const navigate = useNavigate();
 
-  const handleSignOut = () => {
-    // TODO: implement sign out logic
+  const handleSignOut = async () => {
     console.log("Signing out...");
-    navigate("/");
+    try {
+      let response = await axiosInstance.post("/auth/logout");
+      if (response.status === 200) {
+        console.log("Signed out successfully!");
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   };
 
   useEffect(() => {
@@ -62,7 +69,7 @@ export default function Navbar() {
             icon={<ChevronDownIcon />}
             variant="ghost"
           />
-          <MenuList>
+          <MenuList zIndex="1000">
             <MenuItem>Profile</MenuItem>
             <MenuItem>Settings</MenuItem>
             <MenuDivider />

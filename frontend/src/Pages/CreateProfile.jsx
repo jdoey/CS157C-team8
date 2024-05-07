@@ -299,7 +299,7 @@ function LocationMarker() {
   });
 
   return position === null ? null : (
-    <Marker position={position}>
+    <Marker position={position} draggable={true}>
       <Popup>You are here</Popup>
     </Marker>
   );
