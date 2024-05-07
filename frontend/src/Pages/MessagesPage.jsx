@@ -8,6 +8,7 @@ import axiosInstance from "../axiosInstance";
 
 export default function HomePage() {
   const [selected, setSelected] = useState({});
+  const [conversationId, setConversationId] = useState("");
   const [messageHistory, setMessageHistory] = useState([]);
   const [conversations, setConversations] = useState([]);
   const [profile, setProfile] = useState(null);
@@ -29,6 +30,7 @@ export default function HomePage() {
 
   const handleSelect = (conversationId, targetUser) => {
     setSelected(targetUser);
+    setConversationId(conversationId);
     getMessageHistory(conversationId);
   };
 
@@ -73,7 +75,12 @@ export default function HomePage() {
             profile={profile}
           />
           {selected._id != null ? (
-            <MessagesBox selected={selected} messageHistory={messageHistory} />
+            <MessagesBox
+              conversationId={conversationId}
+              selected={selected}
+              profile={profile}
+              messageHistory={messageHistory}
+            />
           ) : (
             <Text></Text>
           )}

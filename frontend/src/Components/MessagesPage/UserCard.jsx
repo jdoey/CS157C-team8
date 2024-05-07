@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 
 const UserCard = ({
-  id,
+  conversationId,
   name,
   targetUser,
   lastMessage,
@@ -24,13 +24,13 @@ const UserCard = ({
 }) => {
   return (
     <Card
-      id={id}
-      onClick={() => handleSelect(id, targetUser)}
+      id={conversationId}
+      onClick={() => handleSelect(conversationId, targetUser)}
       _hover={{
         boxShadow: "lg",
         bg: "gray.100",
       }}
-      bg={selected === id ? "gray.200" : "white"}
+      bg={selected === conversationId ? "gray.200" : "white"}
     >
       <CardHeader>
         <Stack direction="row">
