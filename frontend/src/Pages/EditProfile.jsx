@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  Flex,
-  Text,
-  Button,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-} from "@chakra-ui/react";
+import { Flex, Text, Button } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import { Formik, Form, Field, useField } from "formik";
 import toast, { Toaster } from "react-hot-toast";
 import Input from "../Components/Input";
@@ -143,8 +135,21 @@ export default function EditProfile() {
                 </div>
               ))}
 
+              {/* Location  */}
+              <Text className={styles.headerText} fontWeight="600">
+                Location
+              </Text>
+              <Text className={styles.subheader} marginTop="0">
+                Click here to edit your location
+              </Text>
+              <Link to="/editLocation">
+                <Button>Location</Button>
+              </Link>
+
               {/* Dogs Information  */}
-              <Text className={styles.subheader}>Dogs Information</Text>
+              <Text className={styles.subheader} marginTop="36px">
+                Dogs Information
+              </Text>
               {profile.dogs.map((dog, index) => (
                 <>
                   <Text className={styles.subheader} marginTop="4px">
