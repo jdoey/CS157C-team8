@@ -15,3 +15,8 @@ code {
 #map {
   height: 40vh;
 }
+
+#editmap {
+  height: 60vh;
+  width: 80vw;
+}
