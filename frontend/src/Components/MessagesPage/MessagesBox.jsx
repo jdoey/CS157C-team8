@@ -68,7 +68,7 @@ const MessagesBox = ({
   }, [messageHistory]);
 
   return (
-    <Box width={["100%", "58vw"]} pr={0}>
+    <Box width={["full"]} pr={0}>
       <Card height={"100%"}>
         <Stack height={"90%"}>
           <Card>
@@ -81,7 +81,7 @@ const MessagesBox = ({
               </Stack>
             </CardHeader>
           </Card>
-          <Box height={"100%"} pb={"20px"} overflowY={"auto"}>
+          <Box pb={"20px"} overflowY={"auto"}>
             {messageHistory.map((message, i) =>
               profile._id !== message.sender._id ? (
                 <Box pl={6} pt={1} key={message._id}>
@@ -162,10 +162,10 @@ const MessagesBox = ({
           </Box>
         </Stack>
         <Card>
-          <CardBody pb={"15px"}>
+          <CardBody pb={3} pt={3}>
             <Input
               placeholder="Message..."
-              size="lg"
+              size="md"
               borderRadius="3xl"
               value={inputValue}
               onKeyDown={handleEnterKey}

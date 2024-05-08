@@ -20,6 +20,7 @@ import { FaDog, FaRegCompass, FaRegUser, FaRegMessage } from "react-icons/fa6";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import styles from "./Navbar.module.css";
 import axiosInstance from "../axiosInstance";
+import io from "socket.io-client";
 
 export default function Navbar() {
   const [profile, setProfile] = useState(null);
@@ -31,6 +32,27 @@ export default function Navbar() {
     console.log("Signing out...");
     navigate("/");
   };
+
+  useEffect(() => {
+    console.log("attempting to connect to socket");
+    var socket = io("http://localhost:3001", {
+      jsonp: false,
+      transports: ["websocket"],
+    });
+    console.log("Socket", socket);
+
+    socket.on("connect", () => {
+      console.log("Socket connected successfully!");
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("Socket connection error:", error.code);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     async function fetchData() {

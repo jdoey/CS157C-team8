@@ -3,10 +3,12 @@ const cors = require("cors");
 const express = require("express");
 const session = require("express-session");
 const mongoose = require("mongoose");
+const { Server } = require("socket.io");
+const http = require("http");
 
 const authRoute = require("./src/routes/auth");
 const userRoute = require("./src/routes/user");
-const chatRoute = require("./src/routes/chat")
+const chatRoute = require("./src/routes/chat");
 
 const mongoString = process.env.DATABASE_URL;
 const port = 3001;
@@ -48,6 +50,22 @@ app.use("/auth", authRoute);
 app.use("/user", userRoute);
 app.use("/chat", chatRoute);
 
-app.listen(port, () => {
+const server = http.createServer(app);
+const io = new Server(server);
+
+io.on("connection", (socket) => {
+  console.log("a user connected");
+
+  // socket.on("authenticate", (userId) => {
+  //   socket.userId = userId;
+  //   console.log(`User ${userId} authenticated`);
+  // });
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+});
+
+server.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
