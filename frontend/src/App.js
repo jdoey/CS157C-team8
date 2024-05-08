@@ -9,6 +9,7 @@ import ProfilePage from "./Pages/ProfilePage";
 import EditProfile from "./Pages/EditProfile";
 import EditLocation from "./Pages/EditLocation";
 import socket from "./socket";
+import DogFriendlyPlaces from "./Pages/DogFriendlyPlaces";
 
 function App() {
   // socket.on("session", ({ sessionID, userID }) => {
@@ -31,6 +32,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/edit" element={<EditProfile />} />
           <Route path="/editLocation" element={<EditLocation />} />
+          <Route path="/dogfriendlyplaces" element={<DogFriendlyPlaces />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>
