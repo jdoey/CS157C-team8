@@ -1,48 +1,82 @@
-const express = require('express');
+const express = require("express");
+const { ObjectId } = require("mongodb");
 const router = express.Router();
-const Place = require('../models/NearbyPlaces'); // Ensure this path matches your model file
+const ParkProfile = require("../models/NearbyPlaces"); // Assuming the correct path
+const checkLoggedIn = require("../middleware/authMiddleware"); // Ensure this middleware is properly imported
 
-router.post('/api/dog-friendly-places', async (req, res) => {
-    const { latitude, longitude, date, time } = req.body;
+router.post('/dog-friendly-places', checkLoggedIn, async (req, res) => {
+  const { latitude, longitude } = req.body;
 
-    // Validate the input
-    if (!latitude || !longitude || !date || !time) {
-        return res.status(400).json({ message: "Missing required fields: latitude, longitude, date, and/or time." });
+  if (!latitude || !longitude) {
+    return res.status(400).json({ message: 'Latitude and longitude are required.' });
+  }
+
+  try {
+    const parks = await ParkProfile.find({
+      location: {
+        $near: {
+          $geometry: {
+             type: "Point",
+             coordinates: [longitude, latitude]
+          },
+          $maxDistance: 16093.4 // 10 miles in meters
+        }
+      }
+    });
+
+    if (parks.length > 0) {
+      const enhancedParks = parks.map(park => ({
+        name: park.name,
+        address: park.address,
+        description: park.description,
+        contact: park.contact,
+        openHours: park.openHours,
+        openDays: park.openDays,
+        fees: park.fees,
+        amenities: park.amenities,
+        reviews: park.reviews.map(review => ({
+          reviewer: review.reviewer,
+          text: review.text,
+          rating: review.rating,
+          created_at: review.created_at
+        })),
+        events: park.events
+      }));
+      res.json(enhancedParks);
+    } else {
+      res.status(404).json({ message: 'No parks found within 10 miles of your location.' });
+    }
+  } catch (error) {
+    console.error('Database query failed:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.get("/park/:id", checkLoggedIn, async (req, res) => {
+  try {
+    const parkId = new ObjectId(req.params.id);
+    const parkDetails = await ParkProfile.findById(parkId);
+
+    if (!parkDetails) {
+      return res.status(404).json({ message: "Park not found" });
     }
 
-    // Convert strings to numbers for latitude and longitude
-    const lat = parseFloat(latitude);
-    const lng = parseFloat(longitude);
-
-    if (isNaN(lat) || isNaN(lng)) {
-        return res.status(400).json({ message: "Invalid latitude or longitude values." });
-    }
-
-    // Validate date and time
-    const requestedDateTime = new Date(`${date}T${time}`);
-    const currentDateTime = new Date();
-
-    if (requestedDateTime < currentDateTime) {
-        return res.status(400).json({ message: "Choose a future time-slot." });
-    }
-    //Considering  past date on calender is not dissabled. 
-    // Query for dog-friendly places
-    try {
-        const places = await Place.find({
-            dogFriendly: true, // Assuming your schema has a `dogFriendly` field
-            location: {
-                $near: {
-                    $geometry: { type: "Point", coordinates: [lng, lat] },
-                    $maxDistance: 5000 // 5 kilometers
-                }
-            },
-            'availableTimes.date': requestedDateTime
-        }).where('availableTimes.slots').in([time]);
-
-        res.json(places);
-    } catch (err) {
-        res.status(500).json({ message: 'Error retrieving dog-friendly places', error: err });
-    }
+    res.status(200).json({
+      name: parkDetails.name,
+      address: parkDetails.address,
+      description: parkDetails.description,
+      contact: parkDetails.contact,
+      openHours: parkDetails.openHours,
+      openDays: parkDetails.openDays,
+      fees: parkDetails.fees,
+      amenities: parkDetails.amenities,
+      reviews: parkDetails.reviews,
+      events: parkDetails.events
+    });
+  } catch (err) {
+    console.error('Error fetching park details:', err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 });
 
 module.exports = router;
