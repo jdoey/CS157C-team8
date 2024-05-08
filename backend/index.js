@@ -9,6 +9,7 @@ const http = require("http");
 const authRoute = require("./src/routes/auth");
 const userRoute = require("./src/routes/user");
 const chatRoute = require("./src/routes/chat");
+const placeRoute = require("./src/routes/Places");
 
 const mongoString = process.env.DATABASE_URL;
 const port = 3001;
@@ -49,6 +50,7 @@ app.use(express.json());
 app.use("/auth", authRoute);
 app.use("/user", userRoute);
 app.use("/chat", chatRoute);
+app.use("/Places", placeRoute);
 
 const server = http.createServer(app);
 const io = new Server(server, {
