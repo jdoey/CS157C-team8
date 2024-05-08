@@ -8,7 +8,6 @@ const { checkLoggedIn } = require("../middleware/authMiddleware");
 router.get("/getProfile", checkLoggedIn, async (req, res) => {
   try {
     const userId = req.session.user._id;
-    // console.log(userId);
     const userProfile = await UserProfile.findOne({
       user_id: new ObjectId(userId), // Use ObjectId to convert userId to ObjectId
     });
@@ -17,7 +16,6 @@ router.get("/getProfile", checkLoggedIn, async (req, res) => {
       return res.status(404).json({ message: "User profile not found" });
     }
 
-    // console.log(userProfile);
     return res.status(200).json(userProfile);
   } catch (err) {
     console.log(err);
@@ -25,7 +23,7 @@ router.get("/getProfile", checkLoggedIn, async (req, res) => {
   }
 });
 
-router.get("/getOtherProfile", checkLoggedIn, async (req, res) => {
+router.get("/getNearbyProfiles", checkLoggedIn, async (req, res) => {
   try {
     const userId = req.session.user._id;
 
@@ -37,13 +35,11 @@ router.get("/getOtherProfile", checkLoggedIn, async (req, res) => {
       return res.status(404).json({ message: "User profile not found" });
     }
 
-    // const { coordinates } = userProfile.loc.coordinates;
-
     const profiles = await UserProfile.find({
       user_id: { $ne: new ObjectId(userId) },
       loc: {
         $geoWithin: {
-          $centerSphere: [userProfile.loc.coordinates, 10 / 3963.2],
+          $centerSphere: [userProfile.loc.coordinates, 20 / 3963.2], //10 mile??
         },
       },
     });
@@ -51,6 +47,8 @@ router.get("/getOtherProfile", checkLoggedIn, async (req, res) => {
     if (!profiles || profiles.length === 0) {
       return res.status(404).json({ message: "No profiles found" });
     }
+
+    return res.status(200).json(profiles);
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Internal Server Error" });

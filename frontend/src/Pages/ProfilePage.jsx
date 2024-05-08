@@ -3,7 +3,7 @@ import {
   Flex,
   Text,
   Button,
-  IconButton,
+  Skeleton,
   Tabs,
   TabList,
   TabPanels,
@@ -153,6 +153,11 @@ function SimpleSlider() {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
+
+  if (!images || images.length === 0) {
+    return <Skeleton height="350px" fadeDuration={2} speed={2} />;
+  }
+
   return (
     <div style={{ width: "80%", margin: "auto" }}>
       <Slider {...settings}>
