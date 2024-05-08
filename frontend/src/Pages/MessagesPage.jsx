@@ -67,7 +67,7 @@ export default function HomePage() {
   return (
     <Layout>
       <Flex p="4" pl={0} pt={0} height={"90vh"}>
-        <Stack direction={"row"} gap={0.5}>
+        <Stack direction={"row"} gap={0.5} width={"full"}>
           <MessagesList
             selected={selected}
             handleSelect={handleSelect}
