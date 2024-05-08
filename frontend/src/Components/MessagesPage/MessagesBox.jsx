@@ -1,4 +1,4 @@
-import { React, useState, useEffect, useRef } from "react";
+import { React, useState, useEffect, useRef, useMemo } from "react";
 import {
   Flex,
   Card,
@@ -101,7 +101,7 @@ const MessagesBox = ({
     scrollToBottom();
   }, [messageHistory]);
 
-  useEffect(() => {
+  useMemo(() => {
     console.log("running socket useeffect");
     socket.on("receiveMessage", (data) => {
       console.log(data);
