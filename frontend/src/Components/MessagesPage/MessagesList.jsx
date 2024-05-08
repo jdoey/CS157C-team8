@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 
 import UserCard from "./UserCard";
+import socket from "../../socket";
 
 const MessagesList = ({
   name,
@@ -23,6 +24,15 @@ const MessagesList = ({
   options,
   ...props
 }) => {
+  useEffect(() => {
+    socket.on("users", (users) => {
+      console.log(users);
+      users.forEach((user) => {
+        console.log(user);
+      });
+    });
+  }, []);
+
   return (
     <Box width={["100%", "450px"]}>
       <Card height={"100%"} borderWidth="1px" borderColor="gray.200">

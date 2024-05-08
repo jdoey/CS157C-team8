@@ -13,16 +13,36 @@ import {
   Input,
 } from "@chakra-ui/react";
 import axios from "axios";
+import socket from "../../socket";
 
 const MessagesBox = ({
   conversationId,
   selected,
   profile,
-  messageHistory,
   options,
   ...props
 }) => {
   const [inputValue, setInputValue] = useState("");
+  const [messageHistory, setMessageHistory] = useState([]);
+
+  const getMessageHistory = async (conversationId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/chat/messages/${conversationId}`,
+        {
+          params: { conversationId: conversationId },
+        }
+      );
+      setMessageHistory(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getMessageHistory(conversationId);
+  }, [selected]);
+
   const sendMessage = async (messageData) => {
     try {
       const response = await axios.post(
@@ -46,8 +66,22 @@ const MessagesBox = ({
   };
 
   const handleSendMessage = () => {
+    if (inputValue === "") return;
     console.log("sending message...");
     console.log(inputValue);
+    socket.emit("sendMessage", {
+      content: inputValue,
+      room: conversationId,
+    });
+    setMessageHistory((history) => [
+      ...history,
+      {
+        sender: { _id: profile._id },
+        receiver: profile.ownerName,
+        content: inputValue,
+        conversation: conversationId,
+      },
+    ]);
     sendMessage({
       sender: profile._id,
       receiver: selected._id,
@@ -67,6 +101,22 @@ const MessagesBox = ({
     scrollToBottom();
   }, [messageHistory]);
 
+  useEffect(() => {
+    console.log("running socket useeffect");
+    socket.on("receiveMessage", (data) => {
+      console.log(data);
+      setMessageHistory((history) => [
+        ...history,
+        {
+          sender: { _id: selected._id, ownerName: selected.ownerName },
+          receiver: profile.ownerName,
+          content: data.content,
+          conversation: data.room,
+        },
+      ]);
+    });
+  }, [socket]);
+
   return (
     <Box width={["full"]} pr={0}>
       <Card height={"100%"}>
@@ -82,7 +132,7 @@ const MessagesBox = ({
             </CardHeader>
           </Card>
           <Box pb={"20px"} overflowY={"auto"}>
-            {messageHistory.map((message, i) =>
+            {messageHistory?.map((message, i) =>
               profile._id !== message.sender._id ? (
                 <Box pl={6} pt={1} key={message._id}>
                   <Stack columnGap={3} maxWidth={"45%"}>

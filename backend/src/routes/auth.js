@@ -28,8 +28,10 @@ router.post("/login", async (req, res) => {
     return res.status(401).json({ message: "Invalid username or password" });
   }
 
+  const userId = user._id;
+  const profile = await UserProfile.findOne({ user_id: userId })
   req.session.user = user;
-  return res.status(200).json({ message: "Login successful" });
+  return res.status(200).json({ message: "Login successful", userId: userId, profileId: profile._id});
 });
 
 router.post("/signup", async (req, res) => {

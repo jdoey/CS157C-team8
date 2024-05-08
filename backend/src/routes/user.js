@@ -8,7 +8,7 @@ const { checkLoggedIn } = require("../middleware/authMiddleware");
 router.get("/getProfile", checkLoggedIn, async (req, res) => {
   try {
     const userId = req.session.user._id;
-    console.log(userId);
+    // console.log(userId);
     const userProfile = await UserProfile.findOne({
       user_id: new ObjectId(userId), // Use ObjectId to convert userId to ObjectId
     });
@@ -17,7 +17,7 @@ router.get("/getProfile", checkLoggedIn, async (req, res) => {
       return res.status(404).json({ message: "User profile not found" });
     }
 
-    console.log(userProfile);
+    // console.log(userProfile);
     return res.status(200).json(userProfile);
   } catch (err) {
     console.log(err);

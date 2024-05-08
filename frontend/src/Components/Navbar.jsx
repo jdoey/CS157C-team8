@@ -20,7 +20,7 @@ import { FaDog, FaRegCompass, FaRegUser, FaRegMessage } from "react-icons/fa6";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import styles from "./Navbar.module.css";
 import axiosInstance from "../axiosInstance";
-import io from "socket.io-client";
+import socket from "../socket";
 
 export default function Navbar() {
   const [profile, setProfile] = useState(null);
@@ -32,6 +32,7 @@ export default function Navbar() {
     try {
       let response = await axiosInstance.post("/auth/logout");
       if (response.status === 200) {
+        socket.emit("logout");
         console.log("Signed out successfully!");
         navigate("/");
       }
@@ -40,26 +41,26 @@ export default function Navbar() {
     }
   };
 
-  useEffect(() => {
-    console.log("attempting to connect to socket");
-    var socket = io("http://localhost:3001", {
-      jsonp: false,
-      transports: ["websocket"],
-    });
-    console.log("Socket", socket);
+  // useEffect(() => {
+  //   console.log("attempting to connect to socket");
+  //   var socket = io("http://localhost:3001", {
+  //     jsonp: false,
+  //     transports: ["websocket"],
+  //     autoConnect: false,
+  //   });
 
-    socket.on("connect", () => {
-      console.log("Socket connected successfully!");
-    });
+  //   socket.on("connect", () => {
+  //     console.log("Socket connected successfully!");
+  //   });
 
-    socket.on("connect_error", (error) => {
-      console.error("Socket connection error:", error.code);
-    });
+  //   socket.on("connect_error", (error) => {
+  //     console.error("Socket connection error:", error.code);
+  //   });
 
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, []);
 
   useEffect(() => {
     async function fetchData() {

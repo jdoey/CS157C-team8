@@ -5,13 +5,17 @@ import MessagesBox from "../Components/MessagesPage/MessagesBox";
 import Layout from "../Components/Layout";
 import axios from "axios";
 import axiosInstance from "../axiosInstance";
+import socket from "../socket";
 
 export default function HomePage() {
   const [selected, setSelected] = useState({});
   const [conversationId, setConversationId] = useState("");
-  const [messageHistory, setMessageHistory] = useState([]);
   const [conversations, setConversations] = useState([]);
   const [profile, setProfile] = useState(null);
+
+  const joinRoom = (conversationId) => {
+    socket.emit("joinRoom", conversationId);
+  };
 
   async function fetchData() {
     try {
@@ -31,7 +35,6 @@ export default function HomePage() {
   const handleSelect = (conversationId, targetUser) => {
     setSelected(targetUser);
     setConversationId(conversationId);
-    getMessageHistory(conversationId);
   };
 
   const getConversations = async (profileId) => {
@@ -44,21 +47,7 @@ export default function HomePage() {
       );
       console.log(response.data);
       setConversations(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const getMessageHistory = async (conversationId) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:3001/chat/messages/${conversationId}`,
-        {
-          params: { conversationId: conversationId },
-        }
-      );
-      console.log(response.data);
-      setMessageHistory(response.data);
+      response.data.forEach((conversation) => joinRoom(conversation._id));
     } catch (error) {
       console.error(error);
     }
@@ -79,7 +68,6 @@ export default function HomePage() {
               conversationId={conversationId}
               selected={selected}
               profile={profile}
-              messageHistory={messageHistory}
             />
           ) : (
             <Text></Text>
