@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import Input from "../Components/Input";
 import styles from "./LogInPage.module.css";
+import socket from "../socket";
 
 export default function LogInPage() {
   const initialValues = { email: "", password: "" };
@@ -27,7 +28,12 @@ export default function LogInPage() {
         email: values.email,
         password: values.password,
       });
-      console.log(response.data);
+      console.log(response.data.userId);
+      const userId = response.data.userId;
+      const profileId = response.data.profileId;
+      socket.auth = { userId, profileId };
+      socket.connect();
+      console.log(socket);
       navigate("/home");
     } catch (error) {
       console.error(error);
