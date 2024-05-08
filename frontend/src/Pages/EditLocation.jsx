@@ -38,7 +38,7 @@ export default function EditLocation() {
   const handleSave = async () => {
     try {
       const response = await axiosInstance.post("/user/updateLocation", {
-        coordinates: [value.lat, value.lng],
+        coordinates: [value.lng, value.lat],
       });
       if (response.status === 200) {
         console.log("User info updated!");
@@ -54,8 +54,6 @@ export default function EditLocation() {
   if (!value) {
     return <div>Loading...</div>;
   }
-
-  console.log("Location data:", value);
 
   return (
     <Flex>
