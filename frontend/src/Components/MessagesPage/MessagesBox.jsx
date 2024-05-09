@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import socket from "../../socket";
+import axiosInstance from "../../axiosInstance";
 
 const MessagesBox = ({
   conversationId,
@@ -28,7 +29,7 @@ const MessagesBox = ({
 
   const getMessageHistory = async (conversationId) => {
     try {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `http://localhost:3001/chat/messages/${conversationId}`,
         {
           params: { conversationId: conversationId },
@@ -47,7 +48,7 @@ const MessagesBox = ({
 
   const sendMessage = async (messageData) => {
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `http://localhost:3001/chat/messages/send`,
         messageData
       );
@@ -138,8 +139,6 @@ const MessagesBox = ({
   //   });
   // }, [socket]);
 
-  const viewProfile = () => {};
-
   return (
     <Box width={["full"]} pr={0}>
       <Card height={"100%"}>
@@ -159,7 +158,15 @@ const MessagesBox = ({
               </Stack>
             </CardHeader>
           </Card>
-          <Box pb={"20px"} overflowY={"auto"}>
+          <Box
+            height={"100%"}
+            pb={"20px"}
+            overflowY={"auto"}
+            // these props break scrolling for some reason
+            // display={"flex"}
+            // justifyContent={"flex-end"}
+            // flexDirection={"column"}
+          >
             {messageHistory?.map((message, i) =>
               profile._id !== message.sender._id ? (
                 <Box pl={6} pt={1} key={message._id}>
