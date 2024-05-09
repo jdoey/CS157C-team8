@@ -1,4 +1,5 @@
 import { React, useState, useEffect, useRef, useMemo } from "react";
+import { Link } from "react-router-dom";
 import {
   Flex,
   Card,
@@ -137,6 +138,8 @@ const MessagesBox = ({
   //   });
   // }, [socket]);
 
+  const viewProfile = () => {};
+
   return (
     <Box width={["full"]} pr={0}>
       <Card height={"100%"}>
@@ -144,8 +147,13 @@ const MessagesBox = ({
           <Card>
             <CardHeader>
               <Stack direction="row" alignItems="center">
-                <Avatar size={"md"} name={selected.ownerName} />
-                <Stack pl={"20px"}>
+                <Avatar
+                  as={Link}
+                  to={`/profile/${selected._id}`}
+                  size={"md"}
+                  name={selected.ownerName}
+                />
+                <Stack as={Link} to={`/profile/${selected._id}`} pl={"20px"}>
                   <Heading size="md">{selected.ownerName}</Heading>
                 </Stack>
               </Stack>
