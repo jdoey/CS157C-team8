@@ -77,7 +77,7 @@ export default function ProfilePage() {
           >
             <TabList mb="1em">
               {profile.dogs.map((dog, index) => (
-                <Tab key={index}>Dog {index + 1}</Tab>
+                <Tab key={index}>Dog </Tab>
               ))}
               <Tab>Owner</Tab>
             </TabList>
