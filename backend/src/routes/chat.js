@@ -20,7 +20,30 @@ router.post("/messages/send", checkLoggedIn, async (req, res) => {
             conversation
         });
 
-        await newMessage.save();
+        var message = await newMessage.save();
+        await Conversation.findByIdAndUpdate(conversation, { latestMessage: message._id})
+
+        res.status(201).json({ message: "Message sent successfully" });
+    } catch (error) {
+        console.error("Error sending message:", error);
+        res.status(500).json({ message: "Server error: Message failed to send" })
+    }
+})
+
+router.post("/comments/send", checkLoggedIn, async (req, res) => {
+    try {
+        const { sender, receiver, content, conversation, prompt } = req.body;
+
+        const newMessage = new DirectMessage({
+            sender,
+            receiver,
+            content,
+            conversation,
+            prompt
+        });
+
+        var message = await newMessage.save();
+        await Conversation.findByIdAndUpdate(conversation, { latestMessage: message._id})
 
         res.status(201).json({ message: "Message sent successfully" });
     } catch (error) {

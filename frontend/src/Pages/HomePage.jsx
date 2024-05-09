@@ -217,8 +217,59 @@ function SimpleSlider() {
   );
 }
 
-function Box({ name, title, description }) {
+function Box({ name, title, description, profile }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [inputValue, setInputValue] = useState("");
+
+  const likePrompt = async (messageData) => {
+    try {
+      const response = await axiosInstance.post(
+        `http://localhost:3001/chat/comments/send`,
+        messageData
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const createConversation = async () => {
+    try {
+      const response = await axiosInstance.post(
+        `http://localhost:3001/chat/conversations`,
+        {
+          user: profile._id,
+        }
+      );
+      console.log(response.data);
+      // return response.data;
+
+      likePrompt({
+        sender: response.data.loggedInUserProfile._id,
+        receiver: profile._id,
+        content: inputValue,
+        conversation: response.data.conversation._id,
+        prompt: {
+          title: title,
+          description: description,
+        },
+      });
+      setInputValue("");
+      onClose();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleLikeComment = () => {
+    if (inputValue === "") return;
+    console.log("liking comment...");
+    createConversation();
+  };
 
   return (
     <Flex className={styles.box}>
@@ -251,16 +302,17 @@ function Box({ name, title, description }) {
                 placeholder="Comment..."
                 size="md"
                 borderRadius="3xl"
-                // value={inputValue}
-                // onKeyDown={handleEnterKey}
-                // onChange={handleChange}
+                value={inputValue}
+                onChange={handleChange}
               />
             </ModalBody>
             <ModalFooter>
               {/* <Button colorScheme="blue" mr={3} onClick={onClose}>
                   Close
                 </Button> */}
-              <Button variant="solid">Send Like</Button>
+              <Button variant="solid" onClick={handleLikeComment}>
+                Send Like
+              </Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
@@ -312,13 +364,20 @@ function Profile({ profile }) {
                   <Text className={styles.locationText}>{profile.state}</Text>
                 </Flex>
                 <Box
+                  profile={profile}
                   name={dog.name}
                   title="Gender & Age"
                   description={`${dog.gender}, ${dog.age} years`}
                 />
-                <Box name={dog.name} title="Breed" description={dog.breed} />
+                <Box
+                  profile={profile}
+                  name={dog.name}
+                  title="Breed"
+                  description={dog.breed}
+                />
                 {dog.dogPrompts.map((prompt, index) => (
                   <Box
+                    profile={profile}
                     key={index}
                     name={dog.name}
                     title={prompt.prompt}
@@ -336,12 +395,14 @@ function Profile({ profile }) {
                 {profile.city}, {profile.state}
               </Text>
               <Box
+                profile={profile}
                 name={profile.ownerName}
                 title="Age"
                 description={`${age} years`}
               />
               {profile.ownerPrompts.map((prompt, index) => (
                 <Box
+                  profile={profile}
                   key={index}
                   name={profile.ownerName}
                   title={prompt.prompt}
