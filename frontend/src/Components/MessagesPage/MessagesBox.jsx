@@ -40,6 +40,7 @@ const MessagesBox = ({
   };
 
   useEffect(() => {
+    console.log(conversationId);
     getMessageHistory(conversationId);
   }, [selected]);
 
@@ -101,21 +102,40 @@ const MessagesBox = ({
     scrollToBottom();
   }, [messageHistory]);
 
-  useMemo(() => {
-    console.log("running socket useeffect");
-    socket.on("receiveMessage", (data) => {
-      console.log(data);
-      setMessageHistory((history) => [
-        ...history,
-        {
-          sender: { _id: selected._id, ownerName: selected.ownerName },
-          receiver: profile.ownerName,
-          content: data.content,
-          conversation: data.room,
-        },
-      ]);
-    });
-  }, [socket]);
+  useEffect(() => {
+    const eventListener = (data) => {
+      console.log(selected);
+      console.log("local conversationId: " + conversationId);
+      console.log("socket conversationId: " + data.room);
+      if (data.room === conversationId) {
+        setMessageHistory((history) => [
+          ...history,
+          {
+            sender: { _id: selected._id, ownerName: selected.ownerName },
+            receiver: profile.ownerName,
+            content: data.content,
+            conversation: data.room,
+          },
+        ]);
+      }
+    };
+    socket.on("receiveMessage", eventListener);
+    return () => socket.off("receiveMessage", eventListener);
+  }, [conversationId]);
+
+  // useMemo(() => {
+  //   socket.on("receiveMessage", (data) => {
+  //     setMessageHistory((history) => [
+  //       ...history,
+  //       {
+  //         sender: { _id: selected._id, ownerName: selected.ownerName },
+  //         receiver: profile.ownerName,
+  //         content: data.content,
+  //         conversation: data.room,
+  //       },
+  //     ]);
+  //   });
+  // }, [socket]);
 
   return (
     <Box width={["full"]} pr={0}>
@@ -154,21 +174,6 @@ const MessagesBox = ({
                         </CardBody>
                       </Card>
                     </Stack>
-                    {/* <Stack direction="row" alignItems="center" gap={"15px"}>
-                      <Avatar
-                        visibility="hidden"
-                        size={"sm"}
-                        name={"Jonathan"}
-                      />
-                      <Card borderRadius="3xl" bg={"gray.100"}>
-                        <CardBody p={3} pt={2} pb={2}>
-                          <Text fontSize={"sm"}>
-                            hello its me yoooo hsfdsdf sdfsdfsf sdf sdfsd fsd
-                            fsddd asdasdfas asdasd
-                          </Text>
-                        </CardBody>
-                      </Card>
-                    </Stack> */}
                   </Stack>
                 </Box>
               ) : (
@@ -192,18 +197,6 @@ const MessagesBox = ({
                         </CardBody>
                       </Card>
                     </Stack>
-                    {/* <Stack
-                      direction="row"
-                      alignItems="center"
-                      gap={"15px"}
-                      justifyContent="end"
-                    >
-                      <Card borderRadius="3xl" bg={"blue.400"} color={"white"}>
-                        <CardBody p={3} pt={2} pb={2}>
-                          <Text fontSize={"sm"}>hello its me yoooo</Text>
-                        </CardBody>
-                      </Card>
-                    </Stack> */}
                   </Stack>
                 </Box>
               )

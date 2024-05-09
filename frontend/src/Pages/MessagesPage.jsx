@@ -7,7 +7,7 @@ import axios from "axios";
 import axiosInstance from "../axiosInstance";
 import socket from "../socket";
 
-export default function HomePage() {
+export default function MessagesPage() {
   const [selected, setSelected] = useState({});
   const [conversationId, setConversationId] = useState("");
   const [conversations, setConversations] = useState([]);
