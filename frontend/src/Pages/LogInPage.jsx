@@ -16,12 +16,10 @@ export default function LogInPage() {
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Required"),
-    password: Yup.string()
-      .required("Required")
-      .min(8, "Too short! Minimum length should be 8 characters"),
+    password: Yup.string().required("Required"),
   });
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values, formikHelpers) => {
     try {
       console.log(values);
       const response = await axiosInstance.post("/auth/login", {
@@ -36,7 +34,13 @@ export default function LogInPage() {
       console.log(socket);
       navigate("/home");
     } catch (error) {
-      console.error(error);
+      if (error.response.data.message === "Invalid Email") {
+        formikHelpers.setFieldError("email", "Invalid Email");
+      } else if (error.response.data.message === "Invalid Password") {
+        formikHelpers.setFieldError("password", "Invalid Password");
+      } else {
+        toast.error("An unexpected error occured.");
+      }
     }
   };
 
