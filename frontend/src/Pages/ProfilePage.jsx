@@ -92,7 +92,7 @@ export default function ProfilePage() {
             <TabPanels>
               {profile.dogs.map((dog, index) => (
                 <TabPanel key={index}>
-                  <SimpleSlider />
+                  <SimpleSlider profile={profile} />
                   <Flex className={styles.profile}>
                     <Text className={styles.nameText}>{dog.name}</Text>
                     <Flex gap="4px" marginBottom="8px">
@@ -120,7 +120,7 @@ export default function ProfilePage() {
               ))}
               <TabPanel>
                 {/* Owner Profile  */}
-                <SimpleSlider />
+                <SimpleSlider profile={profile} />
                 <Flex className={styles.profile}>
                   <Text className={styles.nameText}>{profile.ownerName}</Text>
                   <Flex gap="4px" marginBottom="8px">
@@ -145,7 +145,7 @@ export default function ProfilePage() {
   );
 }
 
-function SimpleSlider() {
+function SimpleSlider({ profile }) {
   var settings = {
     dots: true,
     infinite: true,
@@ -161,9 +161,20 @@ function SimpleSlider() {
   return (
     <div style={{ width: "80%", margin: "auto" }}>
       <Slider {...settings}>
-        {images.map((image, index) => (
-          <img className={styles.carouselImg} src={image} alt="dog" />
+        {profile.photos.map((photo, index) => (
+          <img
+            className={styles.carouselImg}
+            src={`http://localhost:3001/user/getPhotos/${photo}`}
+            alt="dog"
+          />
         ))}
+        {/* {images.map((image, index) => (
+          <img
+            className={styles.carouselImg}
+            src={`http://localhost:3001/user/getPhotos/${profile.photos[index]}`}
+            alt="dog"
+          />
+        ))} */}
       </Slider>
     </div>
   );
