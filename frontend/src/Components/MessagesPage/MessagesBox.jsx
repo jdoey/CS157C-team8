@@ -162,7 +162,6 @@ const MessagesBox = ({
             height={"100%"}
             pb={"20px"}
             overflowY={"auto"}
-            // these props break scrolling for some reason
             // display={"flex"}
             // justifyContent={"flex-end"}
             // flexDirection={"column"}
@@ -219,7 +218,7 @@ const MessagesBox = ({
             <div ref={messagesEndRef} />
           </Box>
         </Stack>
-        <Card>
+        <Card height={"10%"}>
           <CardBody pb={3} pt={3}>
             <Input
               placeholder="Message..."
