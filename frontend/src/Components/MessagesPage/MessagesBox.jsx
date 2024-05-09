@@ -118,6 +118,7 @@ const MessagesBox = ({
             receiver: profile.ownerName,
             content: data.content,
             conversation: data.room,
+            prompt: data.prompt,
           },
         ]);
       }

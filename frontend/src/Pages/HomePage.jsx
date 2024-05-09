@@ -105,7 +105,6 @@ export default function HomePage() {
       );
       console.log(response.data);
       // return response.data;
-
       sendMessage({
         sender: response.data.loggedInUserProfile._id,
         receiver: profiles[index]._id,
@@ -268,6 +267,15 @@ function Box({ name, title, description, profile }) {
       console.log(response.data);
       // return response.data;
 
+      socket.emit("sendMessage", {
+        content: inputValue,
+        room: response.data.conversation._id,
+        prompt: {
+          name: name,
+          title: title,
+          description: description,
+        },
+      });
       likePrompt({
         sender: response.data.loggedInUserProfile._id,
         receiver: profile._id,
