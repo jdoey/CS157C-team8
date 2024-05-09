@@ -154,7 +154,7 @@ function SimpleSlider() {
     <div style={{ width: "80%", margin: "auto" }}>
       <Slider {...settings}>
         {images.map((image, index) => (
-          <img className={styles.carouselImg} src={image} alt="dog" />
+          <img className={styles.carouselImg} src={`/${image}`} alt="dog" />
         ))}
       </Slider>
     </div>
