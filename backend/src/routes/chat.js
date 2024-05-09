@@ -1,14 +1,15 @@
 const express = require("express");
-const bcrypt = require("bcryptjs");
+const { ObjectId } = require("mongodb");
 const { UserProfile } = require("../models/userProfile");
 const { DirectMessage } = require("../models/directMessage");
 const { Conversation } = require("../models/conversation");
+const { checkLoggedIn } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
 router.get("/", (req, res) => res.send("Hello World!"));
 
-router.post("/messages/send", async (req, res) => {
+router.post("/messages/send", checkLoggedIn, async (req, res) => {
     try {
         const { sender, receiver, content, conversation } = req.body;
 
@@ -28,7 +29,7 @@ router.post("/messages/send", async (req, res) => {
     }
 })
 
-router.get("/messages/:conversationId", async (req, res) => {
+router.get("/messages/:conversationId", checkLoggedIn, async (req, res) => {
     try {
         const { conversationId } = req.params;
 
@@ -45,7 +46,7 @@ router.get("/messages/:conversationId", async (req, res) => {
     }
 })
 
-router.get("/conversations/:profileId", async (req, res) => {
+router.get("/conversations/:profileId", checkLoggedIn, async (req, res) => {
     try {
         const profileId = req.params.profileId;
         const conversations = await Conversation.find({ users: profileId }).populate({ path: 'users', select: 'ownerName'}).populate('latestMessage');
@@ -55,5 +56,47 @@ router.get("/conversations/:profileId", async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 })
+
+// router.get("/conversations/exist", checkLoggedIn, async (req, res) => {
+//     try {
+
+//     } catch (err) {
+//         console.error("Error checking if conversation exists: ", err);
+//         res.status(500).json({ message: "Internal Server Error"});
+//     }
+// });
+
+router.post("/conversations", checkLoggedIn, async (req, res) => {
+    try {
+        const userId = req.session.user._id;
+        const userProfile = await UserProfile.findOne({
+            user_id: new ObjectId(userId),
+        });
+        const self = userProfile._id;
+        console.log(self);
+        const target = req.body;
+        console.log(target.user);
+
+        const conversationExists = await Conversation.findOne({
+            users: { $all: [self, target.user] }
+        });
+
+        if (conversationExists) {
+            console.log("conversation exists")
+            res.status(200).json({ conversation: conversationExists, loggedInUserProfile: userProfile });
+        } else {
+            console.log("creating new conversation")
+            const newConversation = new Conversation({
+                users: [self, target.user],
+            });
+    
+            await newConversation.save();
+            res.status(201).json({ conversation: newConversation, loggedInUserProfile: userProfile});
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Failed to create conversation' });
+    }
+  });
 
 module.exports = router;

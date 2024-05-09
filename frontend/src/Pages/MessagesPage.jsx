@@ -39,7 +39,7 @@ export default function MessagesPage() {
 
   const getConversations = async (profileId) => {
     try {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `http://localhost:3001/chat/conversations/${profileId}`,
         {
           params: { profileId: profileId },

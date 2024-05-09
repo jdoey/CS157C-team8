@@ -55,24 +55,6 @@ const MessagesList = ({
               ) : null
             )
           )}
-          {/* <UserCard
-            name={"Jonathan"}
-            lastMessage={"You: hi john"}
-            selected={selected}
-            handleSelect={handleSelect}
-          />
-          <UserCard
-            name={"Sephia"}
-            lastMessage={"You: hi seph"}
-            selected={selected}
-            handleSelect={handleSelect}
-          />
-          <UserCard
-            name={"Anusha"}
-            lastMessage={"hi"}
-            selected={selected}
-            handleSelect={handleSelect}
-          /> */}
         </CardBody>
       </Card>
     </Box>
