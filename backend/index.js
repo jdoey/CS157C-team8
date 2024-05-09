@@ -2,10 +2,10 @@ require("dotenv").config();
 const cors = require("cors");
 const express = require("express");
 const session = require("express-session");
+const crypto = require('crypto');
 const mongoose = require("mongoose");
 const { Server } = require("socket.io");
 const http = require("http");
-
 const authRoute = require("./src/routes/auth");
 const userRoute = require("./src/routes/user");
 const chatRoute = require("./src/routes/chat");
@@ -58,12 +58,15 @@ const io = new Server(server, {
   },
 });
 
+io.engine.use(sessionConfig);
+
 io.on("connection", (socket) => {
   console.log(`a user connected: ${socket.handshake.auth.profileId}`);
   const users = [];
   for (let [id, socket] of io.of("/").sockets) {
     users.push({
       socketId: id,
+      sessionId: socket.sessionId,
       userId: socket.userId,
       profileId: socket.profileId
     });
@@ -77,13 +80,14 @@ io.on("connection", (socket) => {
   // });
 
   // socket.emit("session", {
-  //   sessionID: socket.sessionID,
-  //   userID: socket.userID,
+  //   sessionId: socket.sessionId,
+  //   userId: socket.userId,
+  //   profileId: socket.profileId
   // });
 
   socket.on("joinRoom", (conversationId) => {
     socket.join(conversationId);
-    console.log(`User with ID: ${socket.profileId} joined room: ${conversationId}`);
+    console.log(`User with ID: ${socket.userId} joined room: ${conversationId}`);
   });
 
   socket.on("sendMessage", (data) => {
@@ -108,14 +112,18 @@ io.on("connection", (socket) => {
 });
 
 io.use((socket, next) => {
-  const userId = socket.handshake.auth.userId;
-  const profileId = socket.handshake.auth.profileId;
-  if (!userId) {
-    return next(new Error("invalid user"));
+  const session = socket.request.session;
+
+  if (session.user) {
+      socket.sessionId = session.id;
+      socket.userId = session.user?._id;
+      socket.profileId = socket.handshake.auth.profileId;
+      return next();
+  } else {
+    return next(new Error("user not logged in"));
   }
-  socket.userId = userId;
-  socket.profileId = profileId;
-  next();
+
+
 });
 
 // io.use((socket, next) => {

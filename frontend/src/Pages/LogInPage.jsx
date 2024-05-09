@@ -27,9 +27,9 @@ export default function LogInPage() {
         password: values.password,
       });
       console.log(response.data.userId);
-      const userId = response.data.userId;
+      // const userId = response.data.userId;
       const profileId = response.data.profileId;
-      socket.auth = { userId, profileId };
+      socket.auth = { profileId };
       socket.connect();
       console.log(socket);
       navigate("/home");

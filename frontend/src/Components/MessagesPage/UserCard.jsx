@@ -30,7 +30,7 @@ const UserCard = ({
         boxShadow: "lg",
         bg: "gray.100",
       }}
-      bg={selected === conversationId ? "gray.200" : "white"}
+      bg={selected._id === targetUser._id ? "gray.200" : "white"}
     >
       <CardHeader>
         <Stack direction="row">

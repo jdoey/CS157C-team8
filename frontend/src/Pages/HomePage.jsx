@@ -18,7 +18,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../Components/CustomCarousel.css";
 import axiosInstance from "../axiosInstance";
-
 import styles from "./HomePage.module.css";
 
 const images = ["pip.jpg", "piper.jpg", "pip.jpg"];

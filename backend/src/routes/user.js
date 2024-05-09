@@ -23,6 +23,24 @@ router.get("/getProfile", checkLoggedIn, async (req, res) => {
   }
 });
 
+router.get("/getProfile/:profileId", checkLoggedIn, async (req, res) => {
+  try {
+    const profileId = req.params.profileId;
+    const userProfile = await UserProfile.findOne({
+      _id: profileId,
+    });
+
+    if (!userProfile) {
+      return res.status(404).json({ message: "User profile not found" });
+    }
+
+    return res.status(200).json(userProfile);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 router.get("/getNearbyProfiles", checkLoggedIn, async (req, res) => {
   try {
     const userId = req.session.user._id;
