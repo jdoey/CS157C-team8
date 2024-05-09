@@ -210,6 +210,9 @@ const MessagesBox = ({
                         <CardBody p={3} pt={2} pb={2}>
                           {message?.prompt != null ? (
                             <Flex className={styles.box2}>
+                              <Text className={styles.name}>
+                                {message.prompt.name}
+                              </Text>
                               <Text className={styles.title}>
                                 {message.prompt.title}
                               </Text>

@@ -250,6 +250,7 @@ function Box({ name, title, description, profile }) {
         content: inputValue,
         conversation: response.data.conversation._id,
         prompt: {
+          name: name,
           title: title,
           description: description,
         },

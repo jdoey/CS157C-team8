@@ -5,6 +5,7 @@ const directMessageSchema = new mongoose.Schema({
     receiver: { type: mongoose.Schema.Types.ObjectId, ref: 'UserProfile', required: true },
     content: { type: String, required: true },
     prompt: {
+        name: String,
         title: String,
         description: String 
     },
