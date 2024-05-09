@@ -25,6 +25,10 @@
   border-radius: 8px;
 }
 
+.frameImg {
+  padding: 24px;
+}
+
 .profile {
   margin-top: 36px;
   flex-direction: column;

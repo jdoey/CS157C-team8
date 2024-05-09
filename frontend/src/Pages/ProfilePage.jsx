@@ -85,7 +85,7 @@ export default function ProfilePage() {
           >
             <TabList mb="1em">
               {profile.dogs.map((dog, index) => (
-                <Tab key={index}>Dog {index + 1}</Tab>
+                <Tab key={index}>Dog </Tab>
               ))}
               <Tab>Owner</Tab>
             </TabList>
@@ -161,20 +161,33 @@ function SimpleSlider({ profile }) {
   return (
     <div style={{ width: "80%", margin: "auto" }}>
       <Slider {...settings}>
-        {profile.photos.map((photo, index) => (
+        {profile.photos[0] ? (
           <img
             className={styles.carouselImg}
-            src={`http://localhost:3001/user/getPhotos/${photo}`}
+            src={`http://localhost:3001/user/getPhotos/${profile.photos[0]}`}
             alt="dog"
           />
-        ))}
-        {/* {images.map((image, index) => (
+        ) : (
+          <img className={styles.frameImg} src="frame.png" />
+        )}
+        {profile.photos[1] ? (
           <img
             className={styles.carouselImg}
-            src={`http://localhost:3001/user/getPhotos/${profile.photos[index]}`}
+            src={`http://localhost:3001/user/getPhotos/${profile.photos[1]}`}
             alt="dog"
           />
-        ))} */}
+        ) : (
+          <img className={styles.frameImg} src="frame.png" />
+        )}
+        {profile.photos[2] ? (
+          <img
+            className={styles.carouselImg}
+            src={`http://localhost:3001/user/getPhotos/${profile.photos[2]}`}
+            alt="dog"
+          />
+        ) : (
+          <img className={styles.frameImg} src="frame.png" />
+        )}
       </Slider>
     </div>
   );
@@ -186,11 +199,6 @@ function Box({ title, description }) {
       <Text className={styles.title}>{title}</Text>
       <Flex justifyContent="space-between" alignItems="center" width="100%">
         <Text className={styles.description}>{description}</Text>
-        {/* <IconButton
-          icon={<FaPenToSquare />}
-          variant="ghost"
-          className={styles.heartButton}
-        /> */}
       </Flex>
     </Flex>
   );

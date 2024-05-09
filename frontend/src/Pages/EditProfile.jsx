@@ -210,7 +210,7 @@ export default function EditProfile() {
               {profile.dogs.map((dog, index) => (
                 <>
                   <Text className={styles.subheader} marginTop="4px">
-                    Dog {index + 1}
+                    Dog
                   </Text>
                   <Input
                     name={`dogName${index}`}

@@ -194,7 +194,7 @@ export default function HomePage() {
   );
 }
 
-function SimpleSlider() {
+function SimpleSlider({ profile }) {
   var settings = {
     dots: true,
     infinite: true,
@@ -209,9 +209,33 @@ function SimpleSlider() {
   return (
     <div style={{ width: "80%", margin: "auto" }}>
       <Slider {...settings}>
-        {images.map((image, index) => (
-          <img className={styles.carouselImg} src={image} alt="dog" />
-        ))}
+        {profile.photos[0] ? (
+          <img
+            className={styles.carouselImg}
+            src={`http://localhost:3001/user/getPhotos/${profile.photos[0]}`}
+            alt="dog"
+          />
+        ) : (
+          <img className={styles.frameImg} src="frame.png" />
+        )}
+        {profile.photos[1] ? (
+          <img
+            className={styles.carouselImg}
+            src={`http://localhost:3001/user/getPhotos/${profile.photos[1]}`}
+            alt="dog"
+          />
+        ) : (
+          <img className={styles.frameImg} src="frame.png" />
+        )}
+        {profile.photos[2] ? (
+          <img
+            className={styles.carouselImg}
+            src={`http://localhost:3001/user/getPhotos/${profile.photos[2]}`}
+            alt="dog"
+          />
+        ) : (
+          <img className={styles.frameImg} src="frame.png" />
+        )}
       </Slider>
     </div>
   );
@@ -350,14 +374,14 @@ function Profile({ profile }) {
       >
         <TabList mb="1em">
           {profile.dogs.map((dog, index) => (
-            <Tab key={index}>Dog {index + 1}</Tab>
+            <Tab key={index}>Dog </Tab>
           ))}
           <Tab>Owner</Tab>
         </TabList>
         <TabPanels>
           {profile.dogs.map((dog, index) => (
             <TabPanel key={index}>
-              <SimpleSlider />
+              <SimpleSlider profile={profile} />
               <Flex className={styles.profile}>
                 <Text className={styles.nameText}>{dog.name}</Text>
                 <Flex gap="4px" marginBottom="8px">
@@ -389,12 +413,12 @@ function Profile({ profile }) {
             </TabPanel>
           ))}
           <TabPanel>
-            <SimpleSlider />
+            <SimpleSlider profile={profile} />
             <Flex className={styles.profile}>
               <Text className={styles.nameText}>{profile.ownerName}</Text>
-              <Text className={styles.locationText}>
+              {/* <Text className={styles.locationText}>
                 {profile.city}, {profile.state}
-              </Text>
+              </Text> */}
               <Box
                 profile={profile}
                 name={profile.ownerName}
