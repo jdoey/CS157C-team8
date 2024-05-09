@@ -2,27 +2,14 @@ require("dotenv").config();
 const cors = require("cors");
 const express = require("express");
 const session = require("express-session");
-const crypto = require('crypto');
-const mongoose = require("mongoose");
 const { Server } = require("socket.io");
 const http = require("http");
 const authRoute = require("./src/routes/auth");
 const userRoute = require("./src/routes/user");
 const chatRoute = require("./src/routes/chat");
+require("./src/db");
 
-const mongoString = process.env.DATABASE_URL;
 const port = 3001;
-
-mongoose.connect(mongoString);
-const database = mongoose.connection;
-
-database.on("error", (error) => {
-  console.log(error);
-});
-
-database.once("connected", () => {
-  console.log("Database Connected");
-});
 
 const app = express();
 
@@ -68,7 +55,7 @@ io.on("connection", (socket) => {
       socketId: id,
       sessionId: socket.sessionId,
       userId: socket.userId,
-      profileId: socket.profileId
+      profileId: socket.profileId,
     });
     socket.emit("users", users);
     console.log(users);
@@ -87,7 +74,9 @@ io.on("connection", (socket) => {
 
   socket.on("joinRoom", (conversationId) => {
     socket.join(conversationId);
-    console.log(`User with ID: ${socket.userId} joined room: ${conversationId}`);
+    console.log(
+      `User with ID: ${socket.userId} joined room: ${conversationId}`
+    );
   });
 
   socket.on("sendMessage", (data) => {
@@ -96,7 +85,7 @@ io.on("connection", (socket) => {
 
   socket.on("logout", () => {
     socket.disconnect();
-  })
+  });
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
@@ -115,15 +104,13 @@ io.use((socket, next) => {
   const session = socket.request.session;
 
   if (session.user) {
-      socket.sessionId = session.id;
-      socket.userId = session.user?._id;
-      socket.profileId = socket.handshake.auth.profileId;
-      return next();
+    socket.sessionId = session.id;
+    socket.userId = session.user?._id;
+    socket.profileId = socket.handshake.auth.profileId;
+    return next();
   } else {
     return next(new Error("user not logged in"));
   }
-
-
 });
 
 // io.use((socket, next) => {
