@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Formik, Form, Field, useField } from "formik";
 import toast, { Toaster } from "react-hot-toast";
 import Input from "../Components/Input";
+import FileInput from "../Components/FileInput";
 import Select from "../Components/Select";
 import styles from "./EditProfile.module.css";
 import Layout from "../Components/Layout";
@@ -31,9 +32,13 @@ export default function EditProfile() {
 
   const formattedBirthday = profile.birthday.split("T")[0];
 
-  console.log("dog name", profile.dogs[0].name);
-
   const initialValues = {
+    photo0id: profile.photos[0] || "",
+    photo1id: profile.photos[1] || "",
+    photo2id: profile.photos[2] || "",
+    photo0: null,
+    photo1: null,
+    photo2: null,
     ownerName: profile.ownerName || "",
     gender: profile.gender || "",
     birthday: formattedBirthday || "",
@@ -58,7 +63,26 @@ export default function EditProfile() {
 
   const handleSave = async (values) => {
     try {
-      let response = await axiosInstance.post("/user/updateUser", {
+      const loadingToast = toast.loading("Saving...");
+
+      const data = new FormData();
+      if (values.photo0) data.append("photos", values.photo0);
+      if (values.photo1) data.append("photos", values.photo1);
+      if (values.photo2) data.append("photos", values.photo2);
+
+      let response = await axiosInstance.post("/user/uploadPhotos", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (response.status === 200) {
+        console.log("Photos uploaded!");
+      } else {
+        toast.error(response.data);
+      }
+
+      response = await axiosInstance.post("/user/updateUser", {
+        photos: response.data.ids,
         ownerName: values.ownerName,
         gender: values.gender,
         birthday: values.birthday,
@@ -86,6 +110,8 @@ export default function EditProfile() {
       if (response.status === 200) {
         console.log("User info updated!");
         toast.success("Account updated successfully!");
+        toast.dismiss(loadingToast);
+        fetchData();
       } else {
         toast.error(response.data);
       }
@@ -103,6 +129,37 @@ export default function EditProfile() {
         <Flex className={styles.infoContainer}>
           <Formik initialValues={initialValues} onSubmit={handleSave}>
             <Form>
+              <Text className={styles.subheader}>Photos</Text>
+              <Flex flexDirection="column" gap="16px">
+                <FileInput name="photo0" />
+                {profile.photos[0] ? (
+                  <img
+                    src={`http://localhost:3001/user/getPhotos/${profile.photos[0]}`}
+                    style={{ height: "30%", width: "40%" }}
+                  />
+                ) : (
+                  <p>No image set</p>
+                )}
+                <FileInput name="photo1" />
+                {profile.photos[1] ? (
+                  <img
+                    src={`http://localhost:3001/user/getPhotos/${profile.photos[1]}`}
+                    style={{ height: "30%", width: "40%" }}
+                  />
+                ) : (
+                  <p>No image set</p>
+                )}
+                <FileInput name="photo2" />
+                {profile.photos[2] ? (
+                  <img
+                    src={`http://localhost:3001/user/getPhotos/${profile.photos[2]}`}
+                    style={{ height: "30%", width: "40%" }}
+                  />
+                ) : (
+                  <p>No image set</p>
+                )}
+              </Flex>
+
               <Text className={styles.subheader}>Owner Information</Text>
               <Input name="ownerName" type="text" label="Name" required />
 
@@ -153,7 +210,7 @@ export default function EditProfile() {
               {profile.dogs.map((dog, index) => (
                 <>
                   <Text className={styles.subheader} marginTop="4px">
-                    Dog {index + 1}
+                    Dog
                   </Text>
                   <Input
                     name={`dogName${index}`}

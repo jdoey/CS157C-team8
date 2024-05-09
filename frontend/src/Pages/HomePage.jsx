@@ -1,14 +1,24 @@
 import React, { useEffect, useState } from "react";
 import {
+  Input,
+  useDisclosure,
   Flex,
   Text,
   IconButton,
+  Button,
   Tabs,
   TabList,
   TabPanels,
   Tab,
   TabPanel,
   Skeleton,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from "@chakra-ui/react";
 import { FaRegHeart, FaPaperPlane, FaX } from "react-icons/fa6";
 
@@ -18,17 +28,20 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../Components/CustomCarousel.css";
 import axiosInstance from "../axiosInstance";
-
 import styles from "./HomePage.module.css";
+import axios from "axios";
+import socket from "../socket";
 
 const images = ["pip.jpg", "piper.jpg", "pip.jpg"];
 
 export default function HomePage() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [profiles, setProfiles] = useState(null);
   const [index, setIndex] = useState(() => {
     const savedIndex = localStorage.getItem("index");
     return savedIndex ? JSON.parse(savedIndex) : 0;
   });
+  const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
     async function fetchData() {
@@ -70,7 +83,62 @@ export default function HomePage() {
     );
   }
 
-  console.log("nearby profiles", profiles);
+  const sendMessage = async (messageData) => {
+    try {
+      const response = await axiosInstance.post(
+        `http://localhost:3001/chat/messages/send`,
+        messageData
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const createConversation = async () => {
+    try {
+      const response = await axiosInstance.post(
+        `http://localhost:3001/chat/conversations`,
+        {
+          user: profiles[index]._id,
+        }
+      );
+      console.log(response.data);
+      // return response.data;
+
+      sendMessage({
+        sender: response.data.loggedInUserProfile._id,
+        receiver: profiles[index]._id,
+        content: inputValue,
+        conversation: response.data.conversation._id,
+      });
+      setInputValue("");
+      onClose();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleSendMessage = () => {
+    if (inputValue === "") return;
+    console.log("sending message...");
+    console.log(inputValue);
+    console.log(profiles[index]._id);
+    createConversation();
+    // const responseData = createConversation(profiles[index]._id);
+    // sendMessage({
+    //   sender: responseData.loggedInUserProfile._id,
+    //   receiver: profiles[index]._id,
+    //   content: inputValue,
+    //   conversation: responseData.conversation._id,
+    // });
+    // setInputValue("");
+    // onClose();
+  };
 
   return (
     <Layout>
@@ -92,14 +160,41 @@ export default function HomePage() {
             icon={<FaPaperPlane />}
             style={{ width: "50px", height: "50px", borderRadius: "50%" }}
             // TODO: add onClick to message user
+            onClick={onOpen}
           />
+          <Modal isOpen={isOpen} onClose={onClose} isCentered>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Send a message</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Input
+                  placeholder="Message..."
+                  size="md"
+                  borderRadius="3xl"
+                  value={inputValue}
+                  // onKeyDown={handleEnterKey}
+                  onChange={handleChange}
+                />
+              </ModalBody>
+              <ModalFooter>
+                {/* <Button colorScheme="blue" mr={3} onClick={onClose}>
+                  Close
+                </Button>
+                <Button variant="ghost">Secondary Action</Button> */}
+                <Button variant="solid" onClick={handleSendMessage}>
+                  Send
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
         </Flex>
       </Flex>
     </Layout>
   );
 }
 
-function SimpleSlider() {
+function SimpleSlider({ profile }) {
   var settings = {
     dots: true,
     infinite: true,
@@ -114,15 +209,93 @@ function SimpleSlider() {
   return (
     <div style={{ width: "80%", margin: "auto" }}>
       <Slider {...settings}>
-        {images.map((image, index) => (
-          <img className={styles.carouselImg} src={image} alt="dog" />
-        ))}
+        {profile.photos[0] ? (
+          <img
+            className={styles.carouselImg}
+            src={`http://localhost:3001/user/getPhotos/${profile.photos[0]}`}
+            alt="dog"
+          />
+        ) : (
+          <img className={styles.frameImg} src="frame.png" />
+        )}
+        {profile.photos[1] ? (
+          <img
+            className={styles.carouselImg}
+            src={`http://localhost:3001/user/getPhotos/${profile.photos[1]}`}
+            alt="dog"
+          />
+        ) : (
+          <img className={styles.frameImg} src="frame.png" />
+        )}
+        {profile.photos[2] ? (
+          <img
+            className={styles.carouselImg}
+            src={`http://localhost:3001/user/getPhotos/${profile.photos[2]}`}
+            alt="dog"
+          />
+        ) : (
+          <img className={styles.frameImg} src="frame.png" />
+        )}
       </Slider>
     </div>
   );
 }
 
-function Box({ title, description }) {
+function Box({ name, title, description, profile }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [inputValue, setInputValue] = useState("");
+
+  const likePrompt = async (messageData) => {
+    try {
+      const response = await axiosInstance.post(
+        `http://localhost:3001/chat/comments/send`,
+        messageData
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const createConversation = async () => {
+    try {
+      const response = await axiosInstance.post(
+        `http://localhost:3001/chat/conversations`,
+        {
+          user: profile._id,
+        }
+      );
+      console.log(response.data);
+      // return response.data;
+
+      likePrompt({
+        sender: response.data.loggedInUserProfile._id,
+        receiver: profile._id,
+        content: inputValue,
+        conversation: response.data.conversation._id,
+        prompt: {
+          name: name,
+          title: title,
+          description: description,
+        },
+      });
+      setInputValue("");
+      onClose();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleLikeComment = () => {
+    if (inputValue === "") return;
+    console.log("liking comment...");
+    createConversation();
+  };
+
   return (
     <Flex className={styles.box}>
       <Text className={styles.title}>{title}</Text>
@@ -132,7 +305,42 @@ function Box({ title, description }) {
           icon={<FaRegHeart />}
           variant="ghost"
           className={styles.heartButton}
+          onClick={onOpen}
         />
+        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>{name}</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Flex className={styles.box2}>
+                <Text className={styles.title}>{title}</Text>
+                <Flex
+                  justifyContent="space-between"
+                  alignItems="center"
+                  width="100%"
+                >
+                  <Text className={styles.description}>{description}</Text>
+                </Flex>
+              </Flex>
+              <Input
+                placeholder="Comment..."
+                size="md"
+                borderRadius="3xl"
+                value={inputValue}
+                onChange={handleChange}
+              />
+            </ModalBody>
+            <ModalFooter>
+              {/* <Button colorScheme="blue" mr={3} onClick={onClose}>
+                  Close
+                </Button> */}
+              <Button variant="solid" onClick={handleLikeComment}>
+                Send Like
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </Flex>
     </Flex>
   );
@@ -166,14 +374,14 @@ function Profile({ profile }) {
       >
         <TabList mb="1em">
           {profile.dogs.map((dog, index) => (
-            <Tab key={index}>Dog {index + 1}</Tab>
+            <Tab key={index}>Dog </Tab>
           ))}
           <Tab>Owner</Tab>
         </TabList>
         <TabPanels>
           {profile.dogs.map((dog, index) => (
             <TabPanel key={index}>
-              <SimpleSlider />
+              <SimpleSlider profile={profile} />
               <Flex className={styles.profile}>
                 <Text className={styles.nameText}>{dog.name}</Text>
                 <Flex gap="4px" marginBottom="8px">
@@ -181,13 +389,22 @@ function Profile({ profile }) {
                   <Text className={styles.locationText}>{profile.state}</Text>
                 </Flex>
                 <Box
+                  profile={profile}
+                  name={dog.name}
                   title="Gender & Age"
                   description={`${dog.gender}, ${dog.age} years`}
                 />
-                <Box title="Breed" description={dog.breed} />
+                <Box
+                  profile={profile}
+                  name={dog.name}
+                  title="Breed"
+                  description={dog.breed}
+                />
                 {dog.dogPrompts.map((prompt, index) => (
                   <Box
+                    profile={profile}
                     key={index}
+                    name={dog.name}
                     title={prompt.prompt}
                     description={prompt.answer}
                   />
@@ -196,16 +413,23 @@ function Profile({ profile }) {
             </TabPanel>
           ))}
           <TabPanel>
-            <SimpleSlider />
+            <SimpleSlider profile={profile} />
             <Flex className={styles.profile}>
               <Text className={styles.nameText}>{profile.ownerName}</Text>
-              <Text className={styles.locationText}>
+              {/* <Text className={styles.locationText}>
                 {profile.city}, {profile.state}
-              </Text>
-              <Box title="Age" description={`${age} years`} />
+              </Text> */}
+              <Box
+                profile={profile}
+                name={profile.ownerName}
+                title="Age"
+                description={`${age} years`}
+              />
               {profile.ownerPrompts.map((prompt, index) => (
                 <Box
+                  profile={profile}
                   key={index}
+                  name={profile.ownerName}
                   title={prompt.prompt}
                   description={prompt.answer}
                 />

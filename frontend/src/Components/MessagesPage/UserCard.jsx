@@ -9,6 +9,7 @@ import {
   Heading,
   Avatar,
   AvatarBadge,
+  Badge,
   Text,
 } from "@chakra-ui/react";
 
@@ -30,14 +31,18 @@ const UserCard = ({
         boxShadow: "lg",
         bg: "gray.100",
       }}
-      bg={selected === conversationId ? "gray.200" : "white"}
+      bg={selected._id === targetUser._id ? "gray.200" : "white"}
     >
       <CardHeader>
         <Stack direction="row">
           <Avatar size={"md"} name={name} />
           <Stack pl={"20px"} pt={1} gap={0.5}>
             <Heading size="sm">{name}</Heading>
-            <Text fontSize={"xs"}>{lastMessage}</Text>
+            {lastMessage?.sender === targetUser._id ? (
+              <Text fontSize={"xs"}>{lastMessage?.content}</Text>
+            ) : (
+              <Text fontSize={"xs"}>You: {lastMessage?.content}</Text>
+            )}
           </Stack>
         </Stack>
       </CardHeader>

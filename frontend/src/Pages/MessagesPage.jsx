@@ -7,7 +7,7 @@ import axios from "axios";
 import axiosInstance from "../axiosInstance";
 import socket from "../socket";
 
-export default function HomePage() {
+export default function MessagesPage() {
   const [selected, setSelected] = useState({});
   const [conversationId, setConversationId] = useState("");
   const [conversations, setConversations] = useState([]);
@@ -39,7 +39,7 @@ export default function HomePage() {
 
   const getConversations = async (profileId) => {
     try {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `http://localhost:3001/chat/conversations/${profileId}`,
         {
           params: { profileId: profileId },

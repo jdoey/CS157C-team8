@@ -1,4 +1,6 @@
 import "./App.css";
+import { useEffect } from "react";
+
 import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LogInPage from "./Pages/LogInPage";
@@ -10,16 +12,32 @@ import EditProfile from "./Pages/EditProfile";
 import EditLocation from "./Pages/EditLocation";
 import socket from "./socket";
 import DogFriendlyPlaces from "./Pages/DogFriendlyPlaces";
+import UserProfile from "./Pages/UserProfile";
+import socket from "../src/socket";
+import axiosInstance from "../src/axiosInstance";
+
 
 function App() {
-  // socket.on("session", ({ sessionID, userID }) => {
+  // socket.on("session", ({ sessionId, userId, profileId }) => {
   //   // attach the session ID to the next reconnection attempts
-  //   socket.auth = { sessionID };
+  //   socket.auth = { sessionId };
   //   // store it in the localStorage
-  //   localStorage.setItem("sessionID", sessionID);
+  //   localStorage.setItem("sessionId", sessionId);
   //   // save the ID of the user
-  //   socket.userID = userID;
+  //   socket.userId = userId;
+  //   socket.profileId = profileId;
   // });
+
+  // const sessionId = localStorage.getItem("sessionId");
+
+  // if (sessionId) {
+  //   socket.auth = { sessionId };
+  //   socket.connect();
+  // }
+
+  useEffect(() => {
+    socket.connect();
+  }, []);
 
   return (
     <ChakraProvider>
@@ -33,6 +51,7 @@ function App() {
           <Route path="/edit" element={<EditProfile />} />
           <Route path="/editLocation" element={<EditLocation />} />
           <Route path="/dogfriendlyplaces" element={<DogFriendlyPlaces />} />
+          <Route path="/profile/:profileId" element={<UserProfile/>} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>

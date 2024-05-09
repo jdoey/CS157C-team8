@@ -9,15 +9,16 @@ import {
   TabPanels,
   Tab,
   TabPanel,
+  IconButton,
 } from "@chakra-ui/react";
-import { FaPenToSquare } from "react-icons/fa6";
+import { FaPaperPlane, FaRegHeart, FaX } from "react-icons/fa6";
 import Layout from "../Components/Layout";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../Components/CustomCarousel.css";
 import axiosInstance from "../axiosInstance";
-
+import { useParams } from "react-router-dom";
 import styles from "./ProfilePage.module.css";
 
 const images = ["pip.jpg", "piper.jpg", "pip.jpg"];
@@ -40,11 +41,12 @@ function calculateAge(birthDateString) {
 }
 
 export default function ProfilePage() {
+  const { profileId } = useParams();
   const [profile, setProfile] = useState(null);
 
   async function fetchData() {
     try {
-      let response = await axiosInstance.get("/user/getProfile");
+      let response = await axiosInstance.get(`/user/getProfile/${profileId}`);
       console.log(response.data);
       setProfile(response.data);
     } catch (error) {
@@ -67,16 +69,6 @@ export default function ProfilePage() {
     <Layout>
       <Flex className={styles.container}>
         <Flex className={styles.infoContainer}>
-          <a href="/edit">
-            <Button
-              className={styles.edit}
-              rightIcon={<FaPenToSquare />}
-              variant="ghost"
-            >
-              Edit Profile
-            </Button>
-          </a>
-
           <Tabs
             isFitted
             variant="soft-rounded"
@@ -92,7 +84,7 @@ export default function ProfilePage() {
             <TabPanels>
               {profile.dogs.map((dog, index) => (
                 <TabPanel key={index}>
-                  <SimpleSlider profile={profile} />
+                  <SimpleSlider />
                   <Flex className={styles.profile}>
                     <Text className={styles.nameText}>{dog.name}</Text>
                     <Flex gap="4px" marginBottom="8px">
@@ -120,7 +112,7 @@ export default function ProfilePage() {
               ))}
               <TabPanel>
                 {/* Owner Profile  */}
-                <SimpleSlider profile={profile} />
+                <SimpleSlider />
                 <Flex className={styles.profile}>
                   <Text className={styles.nameText}>{profile.ownerName}</Text>
                   <Flex gap="4px" marginBottom="8px">
@@ -145,7 +137,7 @@ export default function ProfilePage() {
   );
 }
 
-function SimpleSlider({ profile }) {
+function SimpleSlider() {
   var settings = {
     dots: true,
     infinite: true,
@@ -161,33 +153,9 @@ function SimpleSlider({ profile }) {
   return (
     <div style={{ width: "80%", margin: "auto" }}>
       <Slider {...settings}>
-        {profile.photos[0] ? (
-          <img
-            className={styles.carouselImg}
-            src={`http://localhost:3001/user/getPhotos/${profile.photos[0]}`}
-            alt="dog"
-          />
-        ) : (
-          <img className={styles.frameImg} src="frame.png" />
-        )}
-        {profile.photos[1] ? (
-          <img
-            className={styles.carouselImg}
-            src={`http://localhost:3001/user/getPhotos/${profile.photos[1]}`}
-            alt="dog"
-          />
-        ) : (
-          <img className={styles.frameImg} src="frame.png" />
-        )}
-        {profile.photos[2] ? (
-          <img
-            className={styles.carouselImg}
-            src={`http://localhost:3001/user/getPhotos/${profile.photos[2]}`}
-            alt="dog"
-          />
-        ) : (
-          <img className={styles.frameImg} src="frame.png" />
-        )}
+        {images.map((image, index) => (
+          <img className={styles.carouselImg} src={`/${image}`} alt="dog" />
+        ))}
       </Slider>
     </div>
   );
@@ -199,6 +167,11 @@ function Box({ title, description }) {
       <Text className={styles.title}>{title}</Text>
       <Flex justifyContent="space-between" alignItems="center" width="100%">
         <Text className={styles.description}>{description}</Text>
+        <IconButton
+          icon={<FaRegHeart />}
+          variant="ghost"
+          className={styles.heartButton}
+        />
       </Flex>
     </Flex>
   );

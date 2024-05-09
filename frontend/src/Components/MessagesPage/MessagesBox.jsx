@@ -1,4 +1,5 @@
 import { React, useState, useEffect, useRef, useMemo } from "react";
+import { Link } from "react-router-dom";
 import {
   Flex,
   Card,
@@ -14,6 +15,8 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import socket from "../../socket";
+import axiosInstance from "../../axiosInstance";
+import styles from "./MessagesBox.module.css";
 
 const MessagesBox = ({
   conversationId,
@@ -27,7 +30,7 @@ const MessagesBox = ({
 
   const getMessageHistory = async (conversationId) => {
     try {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `http://localhost:3001/chat/messages/${conversationId}`,
         {
           params: { conversationId: conversationId },
@@ -40,12 +43,13 @@ const MessagesBox = ({
   };
 
   useEffect(() => {
+    console.log(conversationId);
     getMessageHistory(conversationId);
   }, [selected]);
 
   const sendMessage = async (messageData) => {
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `http://localhost:3001/chat/messages/send`,
         messageData
       );
@@ -101,21 +105,40 @@ const MessagesBox = ({
     scrollToBottom();
   }, [messageHistory]);
 
-  useMemo(() => {
-    console.log("running socket useeffect");
-    socket.on("receiveMessage", (data) => {
-      console.log(data);
-      setMessageHistory((history) => [
-        ...history,
-        {
-          sender: { _id: selected._id, ownerName: selected.ownerName },
-          receiver: profile.ownerName,
-          content: data.content,
-          conversation: data.room,
-        },
-      ]);
-    });
-  }, [socket]);
+  useEffect(() => {
+    const eventListener = (data) => {
+      console.log(selected);
+      console.log("local conversationId: " + conversationId);
+      console.log("socket conversationId: " + data.room);
+      if (data.room === conversationId) {
+        setMessageHistory((history) => [
+          ...history,
+          {
+            sender: { _id: selected._id, ownerName: selected.ownerName },
+            receiver: profile.ownerName,
+            content: data.content,
+            conversation: data.room,
+          },
+        ]);
+      }
+    };
+    socket.on("receiveMessage", eventListener);
+    return () => socket.off("receiveMessage", eventListener);
+  }, [conversationId]);
+
+  // useMemo(() => {
+  //   socket.on("receiveMessage", (data) => {
+  //     setMessageHistory((history) => [
+  //       ...history,
+  //       {
+  //         sender: { _id: selected._id, ownerName: selected.ownerName },
+  //         receiver: profile.ownerName,
+  //         content: data.content,
+  //         conversation: data.room,
+  //       },
+  //     ]);
+  //   });
+  // }, [socket]);
 
   return (
     <Box width={["full"]} pr={0}>
@@ -124,14 +147,26 @@ const MessagesBox = ({
           <Card>
             <CardHeader>
               <Stack direction="row" alignItems="center">
-                <Avatar size={"md"} name={selected.ownerName} />
-                <Stack pl={"20px"}>
+                <Avatar
+                  as={Link}
+                  to={`/profile/${selected._id}`}
+                  size={"md"}
+                  name={selected.ownerName}
+                />
+                <Stack as={Link} to={`/profile/${selected._id}`} pl={"20px"}>
                   <Heading size="md">{selected.ownerName}</Heading>
                 </Stack>
               </Stack>
             </CardHeader>
           </Card>
-          <Box pb={"20px"} overflowY={"auto"}>
+          <Box
+            height={"100%"}
+            pb={"20px"}
+            overflowY={"auto"}
+            // display={"flex"}
+            // justifyContent={"flex-end"}
+            // flexDirection={"column"}
+          >
             {messageHistory?.map((message, i) =>
               profile._id !== message.sender._id ? (
                 <Box pl={6} pt={1} key={message._id}>
@@ -154,21 +189,6 @@ const MessagesBox = ({
                         </CardBody>
                       </Card>
                     </Stack>
-                    {/* <Stack direction="row" alignItems="center" gap={"15px"}>
-                      <Avatar
-                        visibility="hidden"
-                        size={"sm"}
-                        name={"Jonathan"}
-                      />
-                      <Card borderRadius="3xl" bg={"gray.100"}>
-                        <CardBody p={3} pt={2} pb={2}>
-                          <Text fontSize={"sm"}>
-                            hello its me yoooo hsfdsdf sdfsdfsf sdf sdfsd fsd
-                            fsddd asdasdfas asdasd
-                          </Text>
-                        </CardBody>
-                      </Card>
-                    </Stack> */}
                   </Stack>
                 </Box>
               ) : (
@@ -188,22 +208,29 @@ const MessagesBox = ({
                     >
                       <Card borderRadius="3xl" bg={"blue.400"} color={"white"}>
                         <CardBody p={3} pt={2} pb={2}>
+                          {message?.prompt != null ? (
+                            <Flex className={styles.box2}>
+                              <Text className={styles.name}>
+                                {message.prompt.name}
+                              </Text>
+                              <Text className={styles.title}>
+                                {message.prompt.title}
+                              </Text>
+                              <Flex
+                                justifyContent="space-between"
+                                alignItems="center"
+                                width="100%"
+                              >
+                                <Text className={styles.description}>
+                                  {message.prompt.description}
+                                </Text>
+                              </Flex>
+                            </Flex>
+                          ) : null}
                           <Text fontSize={"sm"}>{message.content}</Text>
                         </CardBody>
                       </Card>
                     </Stack>
-                    {/* <Stack
-                      direction="row"
-                      alignItems="center"
-                      gap={"15px"}
-                      justifyContent="end"
-                    >
-                      <Card borderRadius="3xl" bg={"blue.400"} color={"white"}>
-                        <CardBody p={3} pt={2} pb={2}>
-                          <Text fontSize={"sm"}>hello its me yoooo</Text>
-                        </CardBody>
-                      </Card>
-                    </Stack> */}
                   </Stack>
                 </Box>
               )
@@ -211,7 +238,7 @@ const MessagesBox = ({
             <div ref={messagesEndRef} />
           </Box>
         </Stack>
-        <Card>
+        <Card height={"10%"}>
           <CardBody pb={3} pt={3}>
             <Input
               placeholder="Message..."

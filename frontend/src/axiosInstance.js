@@ -16,7 +16,7 @@ axiosInstance.interceptors.response.use(
   (error) => {
     // For responses with status code 400-499, resolve the promise with the response
     // This means that requests that return 4xx status code won't get caught by a `catch` block
-    if (error.response && error.response.status === 401) {
+    if (error.response && error.response.status === 403) {
       console.log("Redirecting to login page");
       window.location.href = "/";
       return;

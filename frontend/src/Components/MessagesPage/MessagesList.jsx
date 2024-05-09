@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Flex,
+  Badge,
   Card,
   CardHeader,
   CardBody,
@@ -16,7 +17,6 @@ import UserCard from "./UserCard";
 import socket from "../../socket";
 
 const MessagesList = ({
-  name,
   selected,
   handleSelect,
   conversations,
@@ -55,24 +55,6 @@ const MessagesList = ({
               ) : null
             )
           )}
-          {/* <UserCard
-            name={"Jonathan"}
-            lastMessage={"You: hi john"}
-            selected={selected}
-            handleSelect={handleSelect}
-          />
-          <UserCard
-            name={"Sephia"}
-            lastMessage={"You: hi seph"}
-            selected={selected}
-            handleSelect={handleSelect}
-          />
-          <UserCard
-            name={"Anusha"}
-            lastMessage={"hi"}
-            selected={selected}
-            handleSelect={handleSelect}
-          /> */}
         </CardBody>
       </Card>
     </Box>
