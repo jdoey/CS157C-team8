@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Flex,
+  Badge,
   Card,
   CardHeader,
   CardBody,
@@ -16,7 +17,6 @@ import UserCard from "./UserCard";
 import socket from "../../socket";
 
 const MessagesList = ({
-  name,
   selected,
   handleSelect,
   conversations,

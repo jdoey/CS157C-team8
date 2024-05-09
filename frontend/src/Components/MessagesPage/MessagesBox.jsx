@@ -16,6 +16,7 @@ import {
 import axios from "axios";
 import socket from "../../socket";
 import axiosInstance from "../../axiosInstance";
+import styles from "./MessagesBox.module.css";
 
 const MessagesBox = ({
   conversationId,
@@ -162,7 +163,6 @@ const MessagesBox = ({
             height={"100%"}
             pb={"20px"}
             overflowY={"auto"}
-            // these props break scrolling for some reason
             // display={"flex"}
             // justifyContent={"flex-end"}
             // flexDirection={"column"}
@@ -208,6 +208,22 @@ const MessagesBox = ({
                     >
                       <Card borderRadius="3xl" bg={"blue.400"} color={"white"}>
                         <CardBody p={3} pt={2} pb={2}>
+                          {message?.prompt != null ? (
+                            <Flex className={styles.box2}>
+                              <Text className={styles.title}>
+                                {message.prompt.title}
+                              </Text>
+                              <Flex
+                                justifyContent="space-between"
+                                alignItems="center"
+                                width="100%"
+                              >
+                                <Text className={styles.description}>
+                                  {message.prompt.description}
+                                </Text>
+                              </Flex>
+                            </Flex>
+                          ) : null}
                           <Text fontSize={"sm"}>{message.content}</Text>
                         </CardBody>
                       </Card>
@@ -219,7 +235,7 @@ const MessagesBox = ({
             <div ref={messagesEndRef} />
           </Box>
         </Stack>
-        <Card>
+        <Card height={"10%"}>
           <CardBody pb={3} pt={3}>
             <Input
               placeholder="Message..."
