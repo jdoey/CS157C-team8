@@ -2,7 +2,7 @@ const express = require("express");
 const { ObjectId } = require("mongodb");
 const router = express.Router();
 const ParkProfile = require("../models/NearbyPlaces"); // Assuming the correct path
-const checkLoggedIn = require("../middleware/authMiddleware"); // Ensure this middleware is properly imported
+const { checkLoggedIn } = require("../middleware/authMiddleware");
 
 router.post('/dog-friendly-places', checkLoggedIn, async (req, res) => {
   const { latitude, longitude } = req.body;
@@ -42,7 +42,7 @@ router.post('/dog-friendly-places', checkLoggedIn, async (req, res) => {
         })),
         events: park.events
       }));
-      res.json(enhancedParks);
+      res.status(200).json(enhancedParks);
     } else {
       res.status(404).json({ message: 'No parks found within 10 miles of your location.' });
     }
