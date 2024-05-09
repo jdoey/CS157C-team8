@@ -1,38 +1,58 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const placeSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
+const parkProfileSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  address: {
+    type: String,
+    required: true
+  },
+  description: String,
+  location: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      required: true
     },
-    location: {
-        type: {
-            type: String,
-            enum: ['Point'],
-            required: true
-        },
-        coordinates: {
-            type: [Number],
-            required: true
-        }
-    },
-    address: String,
-    description: String,
-    facilities: [String],
-    hours: String,
-    fees: String,
-    amenities: [String],
-    availableTimes: [{
-        date: {
-            type: Date,
-            required: true
-        },
-        slots: [String]
-    }]
-}, { timestamps: true });
+    coordinates: {
+      type: [Number],
+      required: true
+    }
+  },
+  contact: String,
+  openHours: String,
+  openDays: String,
+  fees: String,
+  amenities: [
+    {
+      feature: String,
+      description: String
+    }
+  ],
+  reviews: [
+    {
+      reviewer: String,
+      text: String,
+      rating: Number,
+      created_at: { type: Date, default: Date.now }
+    }
+  ],
+  events: [
+    {
+      title: String,
+      description: String,
+      date: Date
+    }
+  ],
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now }
+});
 
-placeSchema.index({ 'location': '2dsphere' });
+// Create a geospatial index to optimize location-based queries
+parkProfileSchema.index({ location: '2dsphere' });
 
-const Place = mongoose.model('Place', placeSchema);
+const ParkProfile = mongoose.model("ParkProfile", parkProfileSchema);
 
-module.exports = Place;
+module.exports = ParkProfile;
