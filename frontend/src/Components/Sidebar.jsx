@@ -1,7 +1,13 @@
 import React from "react";
 import { Flex, Box, Text, Button, IconButton } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { FaDog, FaRegCompass, FaRegUser, FaRegMessage,FaPaw  } from "react-icons/fa6";
+import {
+  FaDog,
+  FaRegCompass,
+  FaRegUser,
+  FaRegMessage,
+  FaPaw,
+} from "react-icons/fa6";
 import styles from "./Sidebar.module.css";
 
 export default function Sidebar() {
@@ -45,14 +51,16 @@ export default function Sidebar() {
             Profile
           </Button>
         </Link>
-         <Link to="/dogfriendlyplaces">  {/* Update the route as necessary */}
+        <Link to="/dogfriendlyplaces">
+          {" "}
+          {/* Update the route as necessary */}
           <Button
             className={styles.sidebarButton}
-            leftIcon={<FaPaw/>}  
+            leftIcon={<FaPaw />}
             variant="ghost"
             justifyContent="flex-start"
           >
-            Search Dog-Friendly Places
+            Dog-Friendly Places
           </Button>
         </Link>
       </Flex>

@@ -10,12 +10,10 @@ import MessagesPage from "./Pages/MessagesPage";
 import ProfilePage from "./Pages/ProfilePage";
 import EditProfile from "./Pages/EditProfile";
 import EditLocation from "./Pages/EditLocation";
-import socket from "./socket";
 import DogFriendlyPlaces from "./Pages/DogFriendlyPlaces";
 import UserProfile from "./Pages/UserProfile";
 import socket from "../src/socket";
 import axiosInstance from "../src/axiosInstance";
-
 
 function App() {
   // socket.on("session", ({ sessionId, userId, profileId }) => {
@@ -51,7 +49,7 @@ function App() {
           <Route path="/edit" element={<EditProfile />} />
           <Route path="/editLocation" element={<EditLocation />} />
           <Route path="/dogfriendlyplaces" element={<DogFriendlyPlaces />} />
-          <Route path="/profile/:profileId" element={<UserProfile/>} />
+          <Route path="/profile/:profileId" element={<UserProfile />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>

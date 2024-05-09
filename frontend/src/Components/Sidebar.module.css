@@ -3,7 +3,7 @@
   border-right: 1px solid rgba(192, 192, 192, 0.6);
   min-height: 100vh;
   height: auto;
-  width: 18vw;
+  min-width: 18vw;
 }
 
 .logoContainer {
