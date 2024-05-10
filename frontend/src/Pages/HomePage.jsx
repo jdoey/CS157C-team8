@@ -424,9 +424,9 @@ function Profile({ profile }) {
             <SimpleSlider profile={profile} />
             <Flex className={styles.profile}>
               <Text className={styles.nameText}>{profile.ownerName}</Text>
-              {/* <Text className={styles.locationText}>
+              <Text className={styles.locationText}>
                 {profile.city}, {profile.state}
-              </Text> */}
+              </Text>
               <Box
                 profile={profile}
                 name={profile.ownerName}

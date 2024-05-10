@@ -95,7 +95,7 @@ router.get("/getNearbyProfiles", checkLoggedIn, async (req, res) => {
       user_id: { $ne: new ObjectId(userId) },
       loc: {
         $geoWithin: {
-          $centerSphere: [userProfile.loc.coordinates, 20 / 3963.2], //10 mile??
+          $centerSphere: [userProfile.loc.coordinates, 100 / 3963.2], //10 mile??
         },
       },
     });

@@ -51,6 +51,7 @@ export default function LogInPage() {
         <Flex className={styles.circle}>
           <FaDog className={styles.dogIcon} />
         </Flex>
+        <Text className={styles.logoText}>Connect Fur</Text>
         <Flex className={styles.emailInputContainer}>
           <Formik
             initialValues={initialValues}

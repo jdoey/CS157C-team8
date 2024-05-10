@@ -53,6 +53,7 @@ export default function EditProfile() {
     dogName0: profile.dogs[0].name || "",
     dogBreed0: profile.dogs[0].breed || "",
     dogAge0: profile.dogs[0].age || "",
+    dogGender0: profile.dogs[0].gender || "",
     dog0Prompt0: profile.dogs[0].dogPrompts[0].prompt || "",
     dog0Prompt1: profile.dogs[0].dogPrompts[1].prompt || "",
     dog0Prompt2: profile.dogs[0].dogPrompts[2].prompt || "",
@@ -98,6 +99,7 @@ export default function EditProfile() {
             name: values.dogName0,
             breed: values.dogBreed0,
             age: values.dogAge0,
+            gender: values.dogGender0,
             dogPrompts: [
               { prompt: values.dog0Prompt0, answer: values.dog0Ans0 },
               { prompt: values.dog0Prompt1, answer: values.dog0Ans1 },
@@ -230,6 +232,22 @@ export default function EditProfile() {
                     label="Age"
                     required
                   />
+
+                  <Text className={styles.inputText}>Dog Gender</Text>
+                  <Flex gap="8px" marginBottom="12px">
+                    <Field
+                      type="radio"
+                      name={`dogGender${index}`}
+                      value="Female"
+                    />
+                    Female
+                    <Field
+                      type="radio"
+                      name={`dogGender${index}`}
+                      value="Male"
+                    />
+                    Male
+                  </Flex>
 
                   {/* Dogs Prompts  */}
                   {dog.dogPrompts.map((prompt, pidx) => (
