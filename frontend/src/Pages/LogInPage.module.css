@@ -3,6 +3,13 @@
   padding: 48px 48px;
 }
 
+.logoText {
+  font-size: 36px;
+  font-weight: 700;
+  margin-left: 8px;
+  margin-bottom: 16px;
+}
+
 .textContainer {
   flex-direction: column;
   justify-content: center;
@@ -18,7 +25,7 @@
   background-color: black;
   justify-content: center;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 8px;
 }
 
 .dogIcon {
