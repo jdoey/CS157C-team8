@@ -91,11 +91,16 @@ router.get("/getNearbyProfiles", checkLoggedIn, async (req, res) => {
       return res.status(404).json({ message: "User profile not found" });
     }
 
+    const distance = userProfile.preferences?.distance || 20;
+
+    // Calculate miles to radians
+    const radius = distance / 3963.2;
+
     const profiles = await UserProfile.find({
       user_id: { $ne: new ObjectId(userId) },
       loc: {
         $geoWithin: {
-          $centerSphere: [userProfile.loc.coordinates, 100 / 3963.2], //10 mile??
+          $centerSphere: [userProfile.loc.coordinates, radius],
         },
       },
     });
@@ -200,6 +205,50 @@ router.post("/uploadPhotos", checkLoggedIn, photosUpload, async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+router.post("/setPreferences", checkLoggedIn, async (req, res) => {
+  try {
+    const userId = req.session.user._id;
+    const user_id = new ObjectId(userId);
+    const { distance } = req.body;
+    const result = await UserProfile.updateOne(
+      { user_id },
+      {
+        $set: {
+          preferences: { distance: distance },
+        },
+      }
+    );
+    res.status(200).json({ message: "Preferences updated" });
+  } catch (err) {
+    console.log(err);
+    res
+      .status(500)
+      .json({ message: "Error Occurred When Updating Preferences" });
+  }
+});
+
+router.get("/getPreferences", checkLoggedIn, async (req, res) => {
+  try {
+    const userId = req.session.user._id;
+    const userProfile = await UserProfile.findOne({
+      user_id: new ObjectId(userId),
+    });
+
+    if (!userProfile) {
+      return res.status(404).json({ message: "User profile not found" });
+    }
+
+    if (!userProfile.preferences) {
+      return res.status(404).json({ message: "Preferences not found" });
+    } else {
+      return res.status(200).json(userProfile.preferences);
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Error Occured When Getting Preferences" });
   }
 });
 

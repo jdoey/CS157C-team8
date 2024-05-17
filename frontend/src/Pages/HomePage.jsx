@@ -77,7 +77,13 @@ export default function HomePage() {
           justifyContent="center"
           margin="auto"
         >
-          <Text>Sorry! There's no profile available now :(</Text>
+          <Text>
+            We're sorry, but there are no profiles available at the moment :(
+          </Text>
+          <Text>
+            Try expanding the search distance in your preferences to find more
+            profiles!
+          </Text>
         </Flex>
       </Layout>
     );

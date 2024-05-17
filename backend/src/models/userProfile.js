@@ -30,7 +30,10 @@ const userProfileSchema = new mongoose.Schema({
       updated_at: { type: Date, default: Date.now },
     },
   ],
-   dogs: [
+  preferences: {
+    distance: Number,
+  },
+  dogs: [
     {
       name: String,
       breed: String,
@@ -45,9 +48,9 @@ const userProfileSchema = new mongoose.Schema({
       bio: String,
       photos: [
         {
-            url: String, // URL or file path of the picture
-            caption: String // Optional caption for the picture
-        }
+          url: String, // URL or file path of the picture
+          caption: String, // Optional caption for the picture
+        },
       ],
       likes: [String],
       dislikes: [String],
@@ -56,12 +59,12 @@ const userProfileSchema = new mongoose.Schema({
         medications: [String],
         surgeries: [String],
         vaccinations: {
-            rabies: Date,
-            distemper: Date,
-            parvovirus: Date,
-            kennelCough: Date,
-            others: [String]
-        }
+          rabies: Date,
+          distemper: Date,
+          parvovirus: Date,
+          kennelCough: Date,
+          others: [String],
+        },
       },
       dogPrompts: [
         {
@@ -75,7 +78,9 @@ const userProfileSchema = new mongoose.Schema({
       updated_at: { type: Date, default: Date.now },
     },
   ],
-  directMessageUserList: [{ type: mongoose.Schema.Types.ObjectId, ref: 'UserProfile' }],
+  directMessageUserList: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "UserProfile" },
+  ],
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
 });
