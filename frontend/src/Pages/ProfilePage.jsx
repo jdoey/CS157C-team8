@@ -11,6 +11,7 @@ import {
   TabPanel,
 } from "@chakra-ui/react";
 import { FaPenToSquare } from "react-icons/fa6";
+import { LuFilter } from "react-icons/lu";
 import Layout from "../Components/Layout";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -67,15 +68,26 @@ export default function ProfilePage() {
     <Layout>
       <Flex className={styles.container}>
         <Flex className={styles.infoContainer}>
-          <a href="/edit">
-            <Button
-              className={styles.edit}
-              rightIcon={<FaPenToSquare />}
-              variant="ghost"
-            >
-              Edit Profile
-            </Button>
-          </a>
+          <Flex justifyContent="space-between" gap="4vw">
+            <a href="/filter">
+              <Button
+                className={styles.edit}
+                rightIcon={<LuFilter />}
+                variant="ghost"
+              >
+                Edit Filter
+              </Button>
+            </a>
+            <a href="/edit">
+              <Button
+                className={styles.edit}
+                rightIcon={<FaPenToSquare />}
+                variant="ghost"
+              >
+                Edit Profile
+              </Button>
+            </a>
+          </Flex>
 
           <Tabs
             isFitted

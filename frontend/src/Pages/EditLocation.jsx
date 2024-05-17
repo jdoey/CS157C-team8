@@ -13,14 +13,14 @@ import Layout from "../Components/Layout";
 import axiosInstance from "../axiosInstance";
 
 export default function EditLocation() {
-  const [value, setValue] = useState([39.8097343, -98.5556199]);
+  const [value, setValue] = useState({ lat: 39.8097343, lng: -98.5556199 });
 
   useEffect(() => {
     const fetchLocationData = async () => {
       try {
         const response = await axiosInstance.get("/user/getUserLoc");
         const coords = response.data.coordinates;
-        setValue({ lat: coords[0], lng: coords[1] });
+        setValue({ lat: coords[1], lng: coords[0] });
       } catch (error) {
         console.error("Error fetching location data:", error);
       }
@@ -73,7 +73,8 @@ export default function EditLocation() {
           </Text>
 
           <MapContainer
-            center={{ lat: 39.8097343, lng: -98.5556199 }}
+            // center={{ lat: 39.8097343, lng: -98.5556199 }}
+            center={value}
             zoom={4}
             id="editmap"
           >

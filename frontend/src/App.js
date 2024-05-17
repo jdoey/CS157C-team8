@@ -14,6 +14,7 @@ import DogFriendlyPlaces from "./Pages/DogFriendlyPlaces";
 import UserProfile from "./Pages/UserProfile";
 import socket from "../src/socket";
 import axiosInstance from "../src/axiosInstance";
+import FilterPage from "./Pages/FilterPage";
 
 function App() {
   // socket.on("session", ({ sessionId, userId, profileId }) => {
@@ -48,6 +49,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/edit" element={<EditProfile />} />
           <Route path="/editLocation" element={<EditLocation />} />
+          <Route path="/filter" element={<FilterPage />} />
           <Route path="/dogfriendlyplaces" element={<DogFriendlyPlaces />} />
           <Route path="/profile/:profileId" element={<UserProfile />} />
         </Routes>
