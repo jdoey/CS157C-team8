@@ -293,7 +293,7 @@ function LocationMarker() {
     },
     locationfound(e) {
       setPosition(e.latlng);
-      setValue([e.latlng.lat, e.latlng.lng]);
+      setValue([e.latlng.lng, e.latlng.lat]);
       map.flyTo(e.latlng, 13);
     },
   });
